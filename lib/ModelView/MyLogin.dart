@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 
 class MyLogin extends ChangeNotifier {
   bool _login = false;
-  bool _admin = false;
+  bool _admin = true;
 
   bool get login => _login;
   bool get admin => _admin;

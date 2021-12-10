@@ -8,4 +8,9 @@ class BottomNavigationOffstage extends ChangeNotifier {
     _show = !_show;
     notifyListeners();
   }
+
+  void notStatus() {
+    _show = false;
+    notifyListeners();
+  }
 }

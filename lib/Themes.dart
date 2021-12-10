@@ -7,6 +7,9 @@ ThemeData lightTheme = ThemeData(
     primaryColorLight: kBackColor,
     hoverColor: Colors.white,
     primaryColor: kTextColor,
+    cardTheme: const CardTheme(
+      shadowColor: kBackColor,
+    ),
     textTheme: const TextTheme(headline6: kBold),
     appBarTheme: const AppBarTheme(
         backgroundColor: Colors.white,
@@ -22,7 +25,7 @@ ThemeData darkTheme = ThemeData(
     hoverColor: kTextColor,
     textTheme: const TextTheme(headline6: kBoldWhite),
     appBarTheme: const AppBarTheme(
-        backgroundColor: kTextColor,
+        backgroundColor: Colors.black,
         titleTextStyle: kBoldTextPrimaryColor,
         iconTheme: IconThemeData(color: kPrimaryColor)),
     splashColor: kSecondaryColor);

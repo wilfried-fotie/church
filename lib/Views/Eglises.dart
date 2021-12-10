@@ -124,14 +124,18 @@ class _NavBarState extends State<NavBar> {
         children: [
           Text(widget.title, style: kPrimaryText),
           widget.icon
-              ? Container(
-                  height: 50,
-                  width: 50,
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          image: AssetImage("asset/img/eglise1.png"))),
+              ? IconButton(
+                  icon: const Icon(Icons.menu, color: kPrimaryColor),
+                  onPressed: widget.search,
                 )
+              // ? Container(
+              //     height: 50,
+              //     width: 50,
+              //     decoration: const BoxDecoration(
+              //         shape: BoxShape.circle,
+              //         image: DecorationImage(
+              //             image: AssetImage("asset/img/eglise1.png"))),
+              //   )
               : Container(),
         ],
       ),

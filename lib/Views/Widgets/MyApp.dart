@@ -41,7 +41,7 @@ class _MyAppState extends State<MyApp> {
     return {
       '/': (context) {
         return [
-          const Story(),
+          const ParoissesUI(),
           const Groups(),
           const HomeDays(),
           const LivesVideos(),
@@ -50,7 +50,6 @@ class _MyAppState extends State<MyApp> {
       },
       "/messages": (context) => const Messages(),
       "/meditationDetail": (context) => const MeditationDetail(),
-      "/livreDetail": (context) => const LivreDetail(),
       "/detailEnseignement": (context) => const DetailEnseignement(),
     };
   }
@@ -101,10 +100,10 @@ class _MyAppState extends State<MyApp> {
                   elevation: 0,
                   items: [
                     buildBottomNavigationBarItem(
-                        SvgPicture.asset("asset/img/icons/app-notification.svg",
+                        SvgPicture.asset("asset/img/icons/church-alt.svg",
                             semanticsLabel: 'Texte du jour actif 0',
                             color: kPrimaryColor),
-                        SvgPicture.asset("asset/img/icons/app-notification.svg",
+                        SvgPicture.asset("asset/img/icons/church-alt.svg",
                             semanticsLabel: 'Texte du jour actif 1',
                             color: kTextColor),
                         0),

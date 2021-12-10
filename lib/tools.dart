@@ -46,6 +46,7 @@ const TextStyle kBoldText =
 const InputDecoration inputStyle = InputDecoration(
   fillColor: Colors.white,
   filled: true,
+  labelStyle: TextStyle(color: kTextColor, fontFamily: "Noto"),
   hintStyle: TextStyle(fontFamily: "Noto", fontWeight: FontWeight.w600),
   contentPadding: EdgeInsets.all(12),
   errorBorder: OutlineInputBorder(

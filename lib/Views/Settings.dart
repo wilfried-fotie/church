@@ -1,5 +1,7 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:church/Model/AdminModel.dart';
 import 'package:church/ModelView/MyLogin.dart';
+import 'package:church/Services/AdminInfo.dart';
 import 'package:church/tools.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +9,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/src/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'Admin/Home.dart';
 import 'Widgets/Iconiseur.dart';
+import 'auth/SignIn.dart';
+import 'auth/UpdateProfil.dart';
 
 // ignore: must_be_immutable
 class Setting extends StatelessWidget {
@@ -46,7 +51,35 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   // ignore: prefer_typing_uninitialized_variables
-  var data;
+  final GlobalKey<FormState> key = GlobalKey<FormState>();
+  late final TextEditingController _pass = TextEditingController();
+  final AdminInfo _adminInfo = AdminInfo();
+  String _error = "";
+
+  @override
+  void dispose() {
+    _pass.dispose();
+    super.dispose();
+  }
+
+  void onRegister(setState) async {
+    // Navigator.of(context).pop(false);
+    if (key.currentState!.validate()) {
+      AdminModel _admin = await _adminInfo.getAdmin;
+      if (_admin.password.toString() != _pass.value.text) {
+        setState(() {
+          _error = "Mot de passe incorrect";
+        });
+      }
+    }
+  }
+
+  void onSingIn(setState) {
+    setState(() {
+      _error = "";
+      _pass.clear();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,12 +97,15 @@ class _SettingsState extends State<Settings> {
           height: 20,
         ),
         ListTile(
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const UpdateProfil()));
+          },
           title: const Text(
             "Votre Compte",
             style: TextStyle(fontFamily: "Noto", fontWeight: FontWeight.bold),
           ),
           leading: const Iiconiseur(icon: Icon(Icons.person)),
-          onTap: () async {},
         ),
         const SizedBox(
           height: 10,
@@ -121,27 +157,132 @@ class _SettingsState extends State<Settings> {
         const SizedBox(
           height: 10,
         ),
-        ListTile(
-          title: const Text(
-            "A porpos de l'application",
-            style: TextStyle(fontFamily: "Noto", fontWeight: FontWeight.bold),
-          ),
-          leading: const Iiconiseur(icon: Icon(Icons.info)),
-          onTap: () {
-            context.read<MyLogin>().toggleStatus();
+        Dismissible(
+          key: const ValueKey("admin"),
+          confirmDismiss: (DismissDirection direction) async {
+            return await showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return StatefulBuilder(
+                    builder: (context, StateSetter setState) {
+                  return AlertDialog(
+                    title: const Text("Connexion Administration"),
+                    content: SizedBox(
+                      height: 120,
+                      child: Form(
+                        key: key,
+                        child: Column(
+                          children: [
+                            const Text("Entrez le mot de passe administrateur"),
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            TextFormField(
+                              obscureText: true,
+                              controller: _pass,
+                              validator: (value) {
+                                if (value!.isEmpty)
+                                  return "le mot de passe ne doit pas être null";
+                                if (value.length < 8)
+                                  return "Mot de passe incorrect";
+                              },
+                              decoration:
+                                  inputStyle.copyWith(hintText: "Mot de passe"),
+                            ),
+                            Text(_error,
+                                style: const TextStyle(color: Colors.red))
+                          ],
+                        ),
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                          onPressed: () async {
+                            if (key.currentState!.validate()) {
+                              AdminModel _admin = await _adminInfo.getAdmin;
+                              if (_admin.password.toString() ==
+                                  _pass.value.text) {
+                                Navigator.of(context).pop(false);
+                                context.read<MyLogin>().toggleRights();
+                              }
+                            }
+                            onRegister(setState);
+                          },
+                          child: const Text("Se connecter")),
+                      TextButton(
+                        onPressed: () {
+                          onSingIn(setState);
+                          Navigator.of(context).pop(false);
+                        },
+                        child: const Text("Annuler"),
+                      ),
+                    ],
+                  );
+                });
+              },
+            );
           },
+          background: Container(
+              color: kPrimaryColor, child: const Icon(Icons.dashboard)),
+          child: ListTile(
+            title: const Text(
+              "A porpos de l'application",
+              style: TextStyle(fontFamily: "Noto", fontWeight: FontWeight.bold),
+            ),
+            leading: const Iiconiseur(icon: Icon(Icons.info)),
+            onTap: () {
+              context.read<MyLogin>().toggleStatus();
+            },
+          ),
         ),
+        const SizedBox(
+          height: 10,
+        ),
+        // ignore: unrelated_type_equality_checks
+        context.watch<MyLogin>().admin == true
+            ? ListTile(
+                title: const Text(
+                  "Adminitration de l'Application",
+                  style: TextStyle(
+                      fontFamily: "Noto", fontWeight: FontWeight.bold),
+                ),
+                leading:
+                    const Iiconiseur(icon: Icon(Icons.dashboard_customize)),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Home()));
+                },
+              )
+            : Container(),
         const SizedBox(
           height: 10,
         ),
         ListTile(
           title: const Text(
-            "Se Déconnecter",
+            "Se Déconnecter ",
             style: TextStyle(fontFamily: "Noto", fontWeight: FontWeight.bold),
           ),
           leading: const Iiconiseur(icon: Icon(Icons.logout)),
           onTap: () {
-            FirebaseAuth.instance.signOut();
+            showDialog(
+              context: (context),
+              builder: (context) => AlertDialog(
+                title: const Text("Voulez vous vraiment vous déconnecter ?"),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                        FirebaseAuth.instance.signOut();
+                      },
+                      child: const Text("Se Déconnecter")),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: const Text("Annuler")),
+                ],
+              ),
+            );
           },
         ),
       ],

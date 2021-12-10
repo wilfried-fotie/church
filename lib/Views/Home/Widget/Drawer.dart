@@ -40,47 +40,65 @@ class DrawerContent extends StatelessWidget {
           thickness: 1.5,
         ),
         Ink(
-          color: number == 1 ? kPrimaryColor : null,
+          color: number == 1 ? kSecondaryColor : null,
           child: ListTile(
             onTap: () {
               change(1);
               Navigator.pop(context);
             },
-            title: const Text("Meditation Quotidienne"),
-            leading: const Icon(CupertinoIcons.alarm),
+            title: Text(
+              "Meditation Quotidienne",
+              style: TextStyle(color: number == 1 ? kPrimaryColor : null),
+            ),
+            leading: Icon(CupertinoIcons.alarm,
+                color: number == 1 ? kPrimaryColor : null),
           ),
         ),
         Ink(
-          color: number == 3 ? kPrimaryColor : null,
+          color: number == 3 ? kSecondaryColor : null,
           child: ListTile(
             onTap: () {
               change(3);
               Navigator.pop(context);
             },
-            title: const Text("Enseignements"),
-            leading: const Icon(CupertinoIcons.suit_club),
+            title: Text(
+              "Enseignements",
+              style: TextStyle(color: number == 3 ? kPrimaryColor : null),
+            ),
+            leading: Icon(CupertinoIcons.suit_club,
+                color: number == 3 ? kPrimaryColor : null),
           ),
         ),
         Ink(
-          color: number == 2 ? kPrimaryColor : null,
+          color: number == 2 ? kSecondaryColor : null,
           child: ListTile(
             onTap: () {
               change(2);
               Navigator.pop(context);
             },
-            title: const Text("Livres"),
-            leading: const Icon(CupertinoIcons.book),
+            title: Text(
+              "Livres",
+              style: TextStyle(color: number == 2 ? kPrimaryColor : null),
+            ),
+            leading: Icon(
+              CupertinoIcons.book,
+              color: number == 2 ? kPrimaryColor : null,
+            ),
           ),
         ),
         Ink(
-          color: number == 4 ? kPrimaryColor : null,
+          color: number == 4 ? kSecondaryColor : null,
           child: ListTile(
             onTap: () {
               change(4);
               Navigator.pop(context);
             },
-            title: const Text("Musiques Gospel"),
-            leading: const Icon(CupertinoIcons.music_mic),
+            title: Text(
+              "Musiques Gospel",
+              style: TextStyle(color: number == 4 ? kPrimaryColor : null),
+            ),
+            leading: Icon(CupertinoIcons.music_mic,
+                color: number == 4 ? kPrimaryColor : null),
           ),
         ),
         // const Divider(

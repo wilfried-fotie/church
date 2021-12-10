@@ -5,7 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import '../../tools.dart';
 
 class ProfilPicker extends StatefulWidget {
-  const ProfilPicker({Key? key}) : super(key: key);
+  final bool rad;
+  const ProfilPicker({Key? key, this.rad = false}) : super(key: key);
 
   @override
   _ProfilPickerState createState() => _ProfilPickerState();
@@ -65,17 +66,27 @@ class _ProfilPickerState extends State<ProfilPicker> {
             onTap: () {
               _showPicker(context);
             },
-            child: ClipRRect(
-                borderRadius: BorderRadius.circular(50),
-                child: Semantics(
-                  label: "image picker",
-                  child: Image.file(
-                    File(_image!.path),
-                    width: 100,
+            child: widget.rad
+                ? Container(
                     height: 100,
-                    fit: BoxFit.fitHeight,
-                  ),
-                )),
+                    child: Image.file(
+                      File(_image!.path),
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: Semantics(
+                      label: "image picker",
+                      child: Image.file(
+                        File(_image!.path),
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
+                    )),
           );
   }
 
@@ -91,14 +102,12 @@ class _ProfilPickerState extends State<ProfilPicker> {
                     title: const Text('Importer de la gallerie', style: kBold),
                     onTap: () {
                       _imgFromGallery();
-                      Navigator.of(context).pop();
                     }),
                 ListTile(
                   leading: const Icon(Icons.photo_camera),
                   title: const Text('Camera', style: kBold),
                   onTap: () {
                     _imgFromCamera();
-                    Navigator.of(context).pop();
                   },
                 ),
               ],

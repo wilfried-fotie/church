@@ -1,87 +1,127 @@
 import 'package:church/helper/extention.dart';
 import 'package:church/tools.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:share/share.dart';
+import '../../Model/Meditation.dart';
 
-class MeditationDetail extends StatelessWidget {
+class MeditationDetail extends StatefulWidget {
   const MeditationDetail({Key? key}) : super(key: key);
 
   @override
+  State<MeditationDetail> createState() => _MeditationDetailState();
+}
+
+class _MeditationDetailState extends State<MeditationDetail> {
+  bool language = true;
+
+  @override
   Widget build(BuildContext context) {
-    String text =
-        "Capitule : << Seule la chaîne de message peut avoir une interpolation. Le nom, la description, les arguments et les exemples doivent être des littéraux et ne pas contenir d'interpolations >>\n\n Seul le paramètre args peut faire référence à des variables, et il doit répertorier exactement les paramètres de la fonction. Si vous transmettez des nombres ou des dates et que vous souhaitez les formater, vous devez effectuer le formatage en dehors de la fonction et transmettre la chaîne formatée dans le message Seule la chaîne de message peut avoir une interpolation. Le nom, la description, les arguments et les exemples doivent être des littéraux et ne pas contenir d'interpolations. Seul le paramètre args peut faire référence à des variables, et il doit répertorier exactement les paramètres de la fonction. Si vous transmettez des nombres ou des dates et que vous souhaitez les formater, vous devez effectuer le formatage en dehors de la fonction et transmettre la chaîne formatée dans le message Seule la chaîne de message peut avoir une interpolation. Le nom, la description, les arguments et les exemples doivent être des littéraux et ne pas contenir d'interpolations. Seul le paramètre args peut faire référence à des variables, et il doit répertorier exactement les paramètres de la fonction. Si vous transmettez des nombres ou des dates et que vous souhaitez les formater, vous devez effectuer le formatage en dehors de la fonction et transmettre la chaîne formatée dans le message Seule la chaîne de message peut avoir une interpolation. Le nom, la description, les arguments et les exemples doivent être des littéraux et ne pas contenir d'interpolations. Seul le paramètre args peut faire référence à des variables, et il doit répertorier exactement les paramètres de la fonction. Si vous transmettez des nombres ou des dates et que vous souhaitez les formater, vous devez effectuer le formatage en dehors de la fonction et transmettre la chaîne formatée dans le message";
+    Meditation meditations = Provider.of<Meditation>(context, listen: false);
+    String text = meditations.body;
+
     return Scaffold(
-        appBar: AppBar(
-            title: const Text("1 Thessalonicien 5:1-11"),
-            actions: const [
-              Padding(
-                  padding: EdgeInsets.only(right: 20), child: Icon(Icons.share))
-            ]),
+        appBar: AppBar(title: Text(meditations.ref), actions: [
+          IconButton(onPressed: () {}, icon: const Icon(Icons.translate)),
+          Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: IconButton(
+                  onPressed: () {
+                    Share.share(
+                        "\t ${meditations.titre.toTitleCase} \n \n \t\t ${meditations.ref} \n \n Message \n \n${meditations.body.substring(0, 400) + "... \t \n Lire la suite ici https://lien.com"} ${meditations.question == "" ? "" : "\n \n Question \n \n ${meditations.question}"} \n\n  ${meditations.pray == "" ? "" : "\n Prière \n ${meditations.pray}"}");
+                  },
+                  icon: const Icon(Icons.share)))
+        ]),
         body: ListView(
           children: [
-            Center(
-              child: Text(
-                "Vivre En Chretien Au sein de la Communauté".toTitleCase,
-                style: const TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w900,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
+            const SizedBox(height: 20),
+            // !language
+            //     ? FutureBuilder<String>(
+            //         future: translator
+            //             .translate(meditations.body, to: 'en')
+            //             .then((value) {
+            //           print(value);
+            //           return "Text";
+            //         }),
+            //         builder: (context, snapshot) {
+            //           if (snapshot.hasData) {
+            //             return Text(snapshot.data.toString());
+            //           } else {
+            //             return const Text("En cours de traduction");
+            //           }
+            //         })
+            !language
+                ? Container()
+                : Center(
+                    child: SelectableText(
+                      meditations.titre.toTitleCase,
+                      style: const TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w900,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
             const Divider(
               thickness: 1.5,
             ),
             const SizedBox(
               height: 20,
             ),
-            Center(
-              child: Text(
-                "Message",
-                style: kBoldText.copyWith(decoration: TextDecoration.underline),
-              ),
-            ),
             const SizedBox(
               height: 5,
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Text(
+              child: SelectableText(
                 text,
                 textAlign: TextAlign.justify,
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            meditations.question != ""
+                ? const SizedBox(
+                    height: 20,
+                  )
+                : Container(),
+            meditations.question != ""
+                ? Center(
+                    child: SelectableText(
+                      meditations.question != "" ? "Question" : "",
+                      style: kBoldText.copyWith(
+                          decoration: TextDecoration.underline),
+                      textAlign: TextAlign.justify,
+                    ),
+                  )
+                : Container(),
+            meditations.question != ""
+                ? const SizedBox(
+                    height: 5,
+                  )
+                : Container(),
+            meditations.question != ""
+                ? Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: SelectableText(meditations.question ?? ""),
+                  )
+                : Container(),
+            meditations.question != ""
+                ? const SizedBox(
+                    height: 20,
+                  )
+                : Container(),
             Center(
-              child: Text(
-                "Question ",
+              child: SelectableText(
+                meditations.pray != "" ? "Prière " : "",
                 style: kBoldText.copyWith(decoration: TextDecoration.underline),
-                textAlign: TextAlign.justify,
               ),
             ),
-            const SizedBox(
-              height: 5,
-            ),
-            const Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Text(
-                  "Il existe d'autres mécanismes pour charger les données de formatage de date implémentés, Pour le moment, cela inclura toutes les données, ce qui augmentera la taille du code ?"),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: SelectableText(meditations.pray ?? ""),
             ),
             const SizedBox(
               height: 20,
-            ),
-            Center(
-              child: Text(
-                "Prière ",
-                style: kBoldText.copyWith(decoration: TextDecoration.underline),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Text(
-                  " Pour le moment, cela inclura toutes les données, ce qui augmentera la taille du code"),
-            ),
+            )
           ],
         ));
   }

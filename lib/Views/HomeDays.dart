@@ -43,30 +43,27 @@ class _HomeDaysState extends State<HomeDays> {
           endDrawer: Drawer(
             child: DrawerContent(change: changeCurrent, number: selectedChip),
           ),
-          appBar: AppBar(),
+          appBar: AppBar(title: const Text("EEC Méditation Quotidienne")),
           body: Column(children: [
-            // Container(
-            //   margin: const EdgeInsets.only(bottom: 20.0, top: 20),
-            //   child: const NavBar(
-            //     title: "EEC Méditation Quotidienne",
-            //   ),
-            // ),
-            // SizedBox(
-            //   height: 50,
-            //   child: ListView(
-            //     scrollDirection: Axis.horizontal,
-            //     children: [
-            //       _myChip(1, "Meditation Quotidienne", CupertinoIcons.alarm),
-            //       _myChip(3, "Enseignements", CupertinoIcons.suit_club),
-            //       _myChip(2, "Livres", CupertinoIcons.book),
-            //       _myChip(4, "Musiques Gospel", CupertinoIcons.music_mic),
-            //     ],
-            //   ),
-            // ),
+            SizedBox(
+              height: 50,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  _myChip(1, "Meditation Quotidienne", CupertinoIcons.alarm),
+                  _myChip(3, "Enseignements", CupertinoIcons.suit_club),
+                  _myChip(2, "Livres", CupertinoIcons.book),
+                  _myChip(4, "Musiques Gospel", CupertinoIcons.music_mic),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
             selectedChip == 1
-                ? const Meditation()
+                ? const MeditationView()
                 : selectedChip == 2
-                    ? const Livres()
+                    ? const LivresView()
                     : selectedChip == 3
                         ? const Enseignement()
                         : const Musiques()
@@ -87,7 +84,7 @@ class _HomeDaysState extends State<HomeDays> {
         },
         splashColor: Colors.transparent,
         child: Chip(
-            backgroundColor: selectedChip == number ? kBackColor : null,
+            backgroundColor: selectedChip == number ? kSecondaryColor : null,
             padding: const EdgeInsets.all(10),
             avatar: Icon(icon,
                 color: selectedChip == number

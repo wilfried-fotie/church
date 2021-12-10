@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:church/Model/UserModel.dart';
 import 'package:church/Views/Widgets/CustomButton.dart';
 import 'package:church/Views/Widgets/Header.dart';
@@ -40,7 +39,8 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     var _userRef = firestore.collection("users").withConverter<UserModel>(
-          fromFirestore: (snapshot, _) => UserModel.fromJson(snapshot.data()!),
+          fromFirestore: (snapshot, _) =>
+              UserModel.fromJson(snapshot.data()!, snapshot.id),
           toFirestore: (user, _) => user.toJson(),
         );
     return Scaffold(

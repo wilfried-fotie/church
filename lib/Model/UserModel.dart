@@ -1,26 +1,19 @@
-import 'package:firebase_auth/firebase_auth.dart';
-
 class UserModel {
   final String name, photo;
-  final bool isAdmin;
+  final String? id;
 
-  const UserModel({
-    required this.name,
-    required this.photo,
-    this.isAdmin = false,
-  });
+  const UserModel({required this.name, required this.photo, this.id});
 
-  UserModel.fromJson(Map<String, Object?> json)
+  UserModel.fromJson(Map<String, Object?> json, String id)
       : this(
-            name: json["name"]! as String,
-            photo: json["photo"]! as String,
-            isAdmin: json["isAdmin"]! as bool);
+          name: json["name"]! as String,
+          photo: json["photo"]! as String,
+        );
 
   Map<String, Object?> toJson() {
     return {
       "name": name,
       "photo": photo,
-      "isAdmin": isAdmin,
     };
   }
 }

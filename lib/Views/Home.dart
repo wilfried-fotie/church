@@ -70,11 +70,10 @@ class _HomeState extends State<Home> {
                       color: kTextColor)),
               const SizedBox(height: 20),
 
-              Padding(
-                padding: const EdgeInsets.all(30.0),
+              const Padding(
+                padding: EdgeInsets.all(30.0),
                 child: Text(
-                  "EEC Méditation Quotidienne l' application qui renforce votre foie."
-                      .toTitleCase,
+                  "L' application qui vous accompagne sur le chemin de la foie...",
                   textAlign: TextAlign.center,
                 ),
               ),

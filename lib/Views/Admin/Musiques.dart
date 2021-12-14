@@ -350,13 +350,9 @@ class _MusiqueUiState extends State<MusiqueUi> {
                                                       ? int.parse(
                                                           prix.value.text)
                                                       : 0,
-                                                  musique: !_switch
-                                                      ? urlPdf! +
-                                                          "." +
-                                                          fileName!
-                                                              .split(".")
-                                                              .last
-                                                      : null,
+                                                  musique: urlPdf! +
+                                                      "." +
+                                                      fileName!.split(".").last,
                                                 ));
 
                                                 Navigator.of(context).pop();

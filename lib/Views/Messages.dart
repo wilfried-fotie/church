@@ -7,14 +7,17 @@ import 'package:church/tools.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/src/provider.dart';
 
+import '../Model/UserModel.dart';
 import '../Services/FileManager.dart';
 import '../Services/MessageServices.dart';
+import '../Services/UserServices.dart';
 import 'Widgets/getImage.dart';
 
 class Messages extends StatefulWidget {
@@ -26,6 +29,8 @@ class Messages extends StatefulWidget {
 
 class _MessagesState extends State<Messages> {
   final MessageServices _medData = MessageServices();
+  final UserServices _userData = UserServices();
+
   final _auth = FirebaseAuth.instance.currentUser;
 
   late ScrollController scroll = ScrollController();
@@ -33,8 +38,9 @@ class _MessagesState extends State<Messages> {
   static const int PEERPAGE = 20;
   int nbre = 20;
   int? pause;
-  bool _loader = false;
-
+  bool response = false;
+  Mex? _answer;
+  String? _uid;
   @override
   void initState() {
     super.initState();
@@ -60,6 +66,20 @@ class _MessagesState extends State<Messages> {
     scroll.animateTo(0.0,
         duration: const Duration(milliseconds: 10),
         curve: Curves.easeInOutQuart);
+  }
+
+  updateUi() {
+    setState(() {
+      _answer = null;
+    });
+  }
+
+  send() {
+    setState(() {
+      _answer = null;
+      response = false;
+      _uid = null;
+    });
   }
 
   @override
@@ -95,6 +115,11 @@ class _MessagesState extends State<Messages> {
                 onTap: () {
                   FocusScope.of(context).unfocus();
                   _PutUp();
+                  setState(() {
+                    _answer = null;
+                    response = false;
+                    _uid = null;
+                  });
                 },
                 child: SizedBox(
                   width: double.infinity,
@@ -102,20 +127,141 @@ class _MessagesState extends State<Messages> {
                       stream: _medData.getStreamMessages(nbre),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          List<MessageModel>? data = snapshot.data;
+                          List<MessageModel> data = snapshot.data ?? [];
 
                           return ListView(
                             reverse: true,
+                            shrinkWrap: true,
                             controller: scroll,
-                            children: data!
-                                .map((message) => Mex(
-                                    date: message.date!,
-                                    sender: message.author == _auth!.uid,
-                                    photo: message.photo,
-                                    name: (message.author == _auth!.uid)
-                                        .toString(),
-                                    content: message.message!))
-                                .toList(),
+                            children: data.map((message) {
+                              return SwipeDetector(
+                                  onSwipeRight: () {
+                                    setState(() {
+                                      _uid = message.id;
+
+                                      _answer = Mex(
+                                        answer: true,
+                                        date: message.date!,
+                                        sender: message.author == _auth!.uid,
+                                        photo: message.photo,
+                                        name: message.name,
+                                        id: message.id!,
+                                        content: message.message,
+                                      );
+                                    });
+                                  },
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          message.author == _auth!.uid
+                                              ? CrossAxisAlignment.end
+                                              : CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          alignment:
+                                              message.author == _auth!.uid
+                                                  ? Alignment.topRight
+                                                  : Alignment.topLeft,
+                                          constraints: BoxConstraints(
+                                              minWidth: 100,
+                                              maxWidth: MediaQuery.of(context)
+                                                      .size
+                                                      .width -
+                                                  150),
+                                          decoration: BoxDecoration(
+                                              color: data
+                                                      .where((element) =>
+                                                          (element.id ==
+                                                              message
+                                                                  .reponseUId))
+                                                      .toList()
+                                                      .isNotEmpty
+                                                  ? kTextColor.withOpacity(.1)
+                                                  : null,
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                          child: Column(
+                                            children: [
+                                              data
+                                                      .where((element) =>
+                                                          (element.id ==
+                                                              message
+                                                                  .reponseUId))
+                                                      .toList()
+                                                      .isNotEmpty
+                                                  ? Mex(
+                                                      id: data
+                                                          .where((element) =>
+                                                              element.id ==
+                                                              message
+                                                                  .reponseUId)
+                                                          .toList()
+                                                          .first
+                                                          .author,
+                                                      answer: false,
+                                                      date: data
+                                                          .where((element) =>
+                                                              element.id ==
+                                                              message
+                                                                  .reponseUId)
+                                                          .toList()
+                                                          .first
+                                                          .date!,
+                                                      sender: data
+                                                              .where((element) =>
+                                                                  element.id ==
+                                                                  message
+                                                                      .reponseUId)
+                                                              .toList()
+                                                              .first
+                                                              .author ==
+                                                          _auth!.uid,
+                                                      photo: data
+                                                          .where((element) =>
+                                                              element.id ==
+                                                              message
+                                                                  .reponseUId)
+                                                          .toList()
+                                                          .first
+                                                          .photo,
+                                                      name: data
+                                                          .where((element) =>
+                                                              element.id ==
+                                                              message
+                                                                  .reponseUId)
+                                                          .toList()
+                                                          .first
+                                                          .name,
+                                                      content: data
+                                                          .where((element) =>
+                                                              element.id ==
+                                                              message
+                                                                  .reponseUId)
+                                                          .toList()
+                                                          .first
+                                                          .message,
+                                                      res: true,
+                                                    )
+                                                  : Container(),
+                                              Mex(
+                                                resId: message.reponseUId,
+                                                date: message.date!,
+                                                id: message.author,
+                                                idMess: message.id,
+                                                answer: false,
+                                                sender: message.author ==
+                                                    _auth!.uid,
+                                                photo: message.photo,
+                                                name: message.name,
+                                                content: message.message,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 20,
+                                        )
+                                      ]));
+                            }).toList(),
                           );
                         }
                         return const Center(
@@ -127,86 +273,189 @@ class _MessagesState extends State<Messages> {
                 ),
               ),
             ),
-            SendMessage(_PutUp)
+            _answer ?? Container(),
+            SendMessage(
+              _PutUp,
+              send,
+              status: _uid != null ? true : false,
+              uid: _uid,
+            ),
           ],
         ));
   }
 }
 
-class Mex extends StatelessWidget {
-  final bool sender;
-  final String name, date;
-  final String? photo, content;
+class Mex extends StatefulWidget {
+  final bool sender, answer, res;
+
+  final String name, date, id;
+  final String? photo, content, resId, idMess;
+  final UserModel? user;
+
   const Mex(
       {Key? key,
       this.sender = false,
+      this.answer = false,
+      this.res = false,
+      this.resId,
+      this.idMess,
       required this.name,
       required this.date,
       this.photo,
+      this.user,
+      required this.id,
       this.content})
       : super(key: key);
 
   @override
+  State<Mex> createState() => _MexState();
+}
+
+class _MexState extends State<Mex> {
+  final _auth = FirebaseAuth.instance.currentUser;
+  final MessageServices _medData = MessageServices();
+
+  @override
   Widget build(BuildContext context) {
-    return SwipeDetector(
-      onSwipeRight: () {
-        print(name);
-      },
+    return Container(
+      alignment: widget.answer
+          ? Alignment.center
+          : widget.sender
+              ? Alignment.topRight
+              : Alignment.topLeft,
       child: Container(
-        alignment: sender ? Alignment.topRight : Alignment.topLeft,
-        child: Container(
-          constraints: BoxConstraints(
-              minWidth: 100, maxWidth: MediaQuery.of(context).size.width - 150),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          decoration: BoxDecoration(
-            color: !sender ? Colors.black12 : kPrimaryColor.withOpacity(.2),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                name,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText1!
-                    .copyWith(color: kPrimaryColor),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              photo != null
-                  ? CachedNetworkImage(
-                      height: 180,
-                      fit: BoxFit.cover,
-                      imageUrl: photo!,
-                      placeholder: (context, url) => SizedBox(
-                        child: FittedBox(
-                            child: Icon(Icons.image,
-                                color: Colors.white.withOpacity(.1))),
-                      ),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                    )
-                  : const SizedBox(),
-              photo != null
-                  ? const SizedBox(
-                      height: 10,
-                    )
-                  : const SizedBox(),
-              content != null ? Text(content!) : const SizedBox(),
-              Text(
-                DateFormat.Hm().format(
-                        DateTime.fromMillisecondsSinceEpoch(int.parse(date))) +
-                    " - " +
-                    DateFormat.yMMMd().format(
-                        DateTime.fromMillisecondsSinceEpoch(int.parse(date))),
-                textAlign: TextAlign.end,
-                style: const TextStyle(fontSize: 9),
-              ),
-            ],
-          ),
+        width: widget.answer ? double.infinity : null,
+        constraints: widget.res
+            ? BoxConstraints(
+                minWidth: 100,
+                maxWidth: MediaQuery.of(context).size.width - 150)
+            : widget.answer
+                ? null
+                : BoxConstraints(
+                    minWidth: 100,
+                    maxWidth: MediaQuery.of(context).size.width - 150),
+        padding: widget.res
+            ? const EdgeInsets.symmetric(horizontal: 10, vertical: 5)
+            : const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        margin: widget.res
+            ? const EdgeInsets.symmetric(horizontal: 10, vertical: 5)
+            : const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        decoration: BoxDecoration(
+          color: widget.res
+              ? kSecondaryColor.withOpacity(.2)
+              : !widget.sender
+                  ? Colors.black12
+                  : widget.answer
+                      ? kSecondaryColor.withOpacity(.2)
+                      : kPrimaryColor.withOpacity(.2),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  widget.name,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1!
+                      .copyWith(color: kPrimaryColor),
+                ),
+                widget.sender && widget.idMess != null
+                    ? GestureDetector(
+                        child: const Icon(Icons.more_horiz),
+                        onTap: () {
+                          var image = widget.photo;
+                          showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                    title: const Text(
+                                        "Voulez vraiment supprimer ?"),
+                                    actions: [
+                                      TextButton(
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: const [
+                                              Text("Supprimer"),
+                                              Icon(CupertinoIcons.trash_circle),
+                                            ],
+                                          ),
+                                          onPressed: () async {
+                                            try {
+                                              Navigator.of(context).pop();
+                                              var image = widget.photo;
+                                              await _medData
+                                                  .delete(widget.idMess!);
+                                              print(image);
+                                              widget.photo != null
+                                                  ? await FileMananger.delete(
+                                                      widget.photo!)
+                                                  : null;
+                                            } catch (err) {
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                      "Une erreur est survenu !!! ",
+                                                  backgroundColor: Colors.red,
+                                                  fontSize: 18,
+                                                  textColor: Colors.white);
+                                            }
+                                          }),
+                                      TextButton(
+                                          child: const Text("Annuler"),
+                                          onPressed: () {
+                                            Navigator.pop(context, "false");
+                                          })
+                                    ],
+                                  ));
+                        })
+                    : Container(),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            widget.photo != null
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: Semantics(
+                        label: "image picker",
+                        child: CachedNetworkImage(
+                          height: widget.answer || widget.res ? 40 : 180,
+                          fit: BoxFit.cover,
+                          imageUrl: widget.photo!,
+                          placeholder: (context, url) => SizedBox(
+                            child: FittedBox(
+                                child: Icon(Icons.image,
+                                    color: Colors.white.withOpacity(.1))),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        )))
+                : const SizedBox(),
+            widget.photo != null
+                ? const SizedBox(
+                    height: 10,
+                  )
+                : const SizedBox(),
+            widget.content != null
+                ? Text(widget.answer || widget.res
+                    ? widget.content!.length > 80
+                        ? widget.content!.substring(0, 80) + " ..."
+                        : widget.content!
+                    : widget.content!)
+                : const SizedBox(),
+            Text(
+              DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(
+                      int.parse(widget.date))) +
+                  " - " +
+                  DateFormat.yMMMd().format(DateTime.fromMillisecondsSinceEpoch(
+                      int.parse(widget.date))),
+              textAlign: TextAlign.end,
+              style: const TextStyle(fontSize: 9),
+            ),
+          ],
         ),
       ),
     );
@@ -215,10 +464,12 @@ class Mex extends StatelessWidget {
 
 class SendMessage extends StatefulWidget {
   final void Function() scroll;
-  const SendMessage(
-    this.scroll, {
-    Key? key,
-  }) : super(key: key);
+  final void Function() del;
+  final bool status;
+  final String? uid;
+  const SendMessage(this.scroll, this.del,
+      {Key? key, required this.status, this.uid})
+      : super(key: key);
 
   @override
   State<SendMessage> createState() => _SendMessageState();
@@ -285,6 +536,7 @@ class _SendMessageState extends State<SendMessage> {
           children: [
             IconButton(
                 onPressed: () async {
+                  FocusScope.of(context).unfocus;
                   final result = await showModalBottomSheet(
                       context: context,
                       builder: (BuildContext bc) {
@@ -306,7 +558,7 @@ class _SendMessageState extends State<SendMessage> {
                     focusNode: inputNode,
                     controller: message,
                     validator: (value) {
-                      if (value!.isEmpty) return;
+                      if (value!.trim().isEmpty && value == " ") return;
                     },
                     keyboardType: TextInputType.multiline,
                     decoration: const InputDecoration(
@@ -318,22 +570,29 @@ class _SendMessageState extends State<SendMessage> {
             ),
             IconButton(
               onPressed: () {
-                if (_image != null && !key.currentState!.validate()) {
+                if (_image != null && message.value.text.trim().isEmpty) {
                   setState(() {
                     _loader = true;
                   });
+
                   try {
                     FileMananger.uploadFile(_image!.path, "Message")
-                        .then((value) {
-                      _medData
-                          .addMessage(MessageModel(
-                        author: _auth!.uid,
-                        message: null,
-                        photo: value,
-                      ))
+                        .then((value) async {
+                      await UserServices()
+                          .getUser(_auth!.uid)
+                          .then((user) => _medData.addMessage(MessageModel(
+                                author: _auth!.uid,
+                                message: null,
+                                name: user.name,
+                                type: widget.status,
+                                reponseUId: widget.uid,
+                                photo: value,
+                              )))
                           .then((value) {
                         message.clear();
                         widget.scroll();
+                        widget.del();
+
                         setState(() {
                           _image = null;
                           _loader = false;
@@ -347,9 +606,8 @@ class _SendMessageState extends State<SendMessage> {
                         fontSize: 18,
                         textColor: Colors.white);
                   }
-                }
-
-                if (_image != null && key.currentState!.validate()) {
+                } else if (_image != null &&
+                    message.value.text.trim().isNotEmpty) {
                   var text = message.value.text;
                   setState(() {
                     _loader = true;
@@ -358,21 +616,26 @@ class _SendMessageState extends State<SendMessage> {
                     message.clear();
 
                     FileMananger.uploadFile(_image!.path, "Message")
-                        .then((value) {
-                      _medData
-                          .addMessage(MessageModel(
-                        author: _auth!.uid,
-                        message: text,
-                        photo: value,
-                      ))
+                        .then((value) async {
+                      await UserServices()
+                          .getUser(_auth!.uid)
+                          .then((user) => _medData.addMessage(MessageModel(
+                                author: _auth!.uid,
+                                name: user.name,
+                                message: text,
+                                type: widget.status,
+                                reponseUId: widget.uid,
+                                photo: value,
+                              )))
                           .then((value) {
                         message.clear();
+                        widget.del();
+                        widget.scroll();
+
                         setState(() {
                           _image = null;
                           _loader = false;
                         });
-
-                        widget.scroll();
                       });
                     });
                   } catch (err) {
@@ -382,20 +645,29 @@ class _SendMessageState extends State<SendMessage> {
                         fontSize: 18,
                         textColor: Colors.white);
                   }
-                }
-
-                if (key.currentState!.validate() && _image == null) {
+                } else if (message.value.text.trim().isNotEmpty &&
+                    _image == null) {
                   try {
-                    _medData
-                        .addMessage(MessageModel(
-                      author: _auth!.uid,
-                      message: message.value.text,
-                      photo: null,
-                    ))
-                        .then((value) {
-                      message.clear();
-                      widget.scroll();
-                    });
+                    var mex = message.value.text;
+
+                    message.clear();
+
+                    UserServices()
+                        .getUser(_auth!.uid)
+                        .then((value) async => await _medData
+                                .addMessage(MessageModel(
+                              author: _auth!.uid,
+                              name: value.name,
+                              message: mex,
+                              type: widget.status,
+                              reponseUId: widget.uid,
+                              photo: null,
+                            ))
+                                .then((value) {
+                              message.clear();
+                              widget.scroll();
+                              widget.del();
+                            }));
                   } catch (err) {
                     Fluttertoast.showToast(
                         msg: "Une erreur est survenu !!! ",

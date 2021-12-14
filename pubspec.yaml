@@ -55,7 +55,8 @@ dependencies:
   flutter_local_notifications: ^9.1.4
   url_launcher: ^6.0.17
   syncfusion_flutter_pdfviewer: ^19.3.57-beta
-  just_audio: ^0.9.18
+  flutter_phone_direct_caller: ^2.1.0
+  audioplayers: ^0.20.1
 
  
   
@@ -77,6 +78,9 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
   flutter_native_splash: ^1.3.1
+
+
+
 
 
 flutter_native_splash:
@@ -111,6 +115,8 @@ flutter:
           weight: 600
         - asset: asset/font/Google Font/ProductSans-Black.ttf
           weight: 900
+
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

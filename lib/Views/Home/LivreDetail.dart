@@ -6,6 +6,8 @@ import 'package:church/Services/LIvresServices.dart';
 import 'package:church/Views/Widgets/CustomButton.dart';
 import 'package:church/helper/extention.dart';
 import 'package:church/tools.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -187,7 +189,9 @@ class _LivreDetailState extends State<LivreDetail> {
               : Container(
                   alignment: Alignment.center,
                   child: (!(_loader == true && _download == true) &&
-                          !(data.download != null && data.download == true))
+                          !(data.download != null &&
+                              data.download!.contains(
+                                  FirebaseAuth.instance.currentUser!.uid)))
                       ? Container(
                           alignment: Alignment.center,
                           width: 200,
@@ -210,9 +214,12 @@ class _LivreDetailState extends State<LivreDetail> {
 
                                   return Navigator.push(context,
                                       MaterialPageRoute(builder: (_) {
-                                    LivreService().simpleUpdateLivre(
-                                        {"download": true, "localFile": value},
-                                        data.id!);
+                                    LivreService().simpleUpdateLivre({
+                                      "download": FieldValue.arrayUnion([
+                                        FirebaseAuth.instance.currentUser!.uid
+                                      ]),
+                                      "localFile": value
+                                    }, data.id!);
 
                                     return PdfLocalView(
                                         url: value, title: data.titre);

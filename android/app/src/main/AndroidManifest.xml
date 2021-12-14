@@ -2,7 +2,7 @@
     package="com.example.church">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="church"
+        android:label="EEC Méditation"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -2,6 +2,7 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:church/Model/AdminModel.dart';
 import 'package:church/ModelView/MyLogin.dart';
 import 'package:church/Services/AdminInfo.dart';
+import 'package:church/Views/auth/Registration.dart';
 import 'package:church/tools.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -129,7 +130,10 @@ class _SettingsState extends State<Settings> {
             style: TextStyle(fontFamily: "Noto", fontWeight: FontWeight.bold),
           ),
           leading: const Iiconiseur(icon: Icon(Icons.phone)),
-          onTap: () async {},
+          onTap: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (_) => const SignIn()));
+          },
         ),
         const SizedBox(
           height: 10,
@@ -141,7 +145,10 @@ class _SettingsState extends State<Settings> {
             style: TextStyle(fontFamily: "Noto", fontWeight: FontWeight.bold),
           ),
           leading: const Iiconiseur(icon: Icon(Icons.art_track_rounded)),
-          onTap: () async {},
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const Registration()));
+          },
         ),
         const SizedBox(
           height: 10,

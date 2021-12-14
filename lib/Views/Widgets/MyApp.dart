@@ -77,11 +77,6 @@ class _MyAppState extends State<MyApp> {
           final isFirstRouteInCurrentTab =
               !await _navigatorKeys[_selectIndex].currentState!.maybePop();
 
-          if (_navigatorKeys[_selectIndex].currentState ==
-              _navigatorKeys[1].currentState) {
-            context.read<BottomNavigationOffstage>().toggleStatus();
-          }
-
           return isFirstRouteInCurrentTab;
         },
         child: Scaffold(

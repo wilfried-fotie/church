@@ -7,6 +7,11 @@
 
 		<key>NSCameraUsageDescription</key>
 		<string>Allow access to camera to capture photos</string>
+		<key>NSAppTransportSecurity</key>
+		<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		</dict>
 		<key>LSApplicationQueriesSchemes</key>
 		<array>
 		<string>tel</string>
@@ -24,7 +29,7 @@
 		<key>CFBundleInfoDictionaryVersion</key>
 		<string>6.0</string>
 		<key>CFBundleName</key>
-		<string>church</string>
+		<string>EEC Méditation</string>
 		<key>CFBundlePackageType</key>
 		<string>APPL</string>
 		<key>CFBundleShortVersionString</key>

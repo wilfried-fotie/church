@@ -25,8 +25,9 @@ class _GetImageState extends State<GetImage> {
               leading: const Icon(Icons.photo_library),
               title: const Text('Importer de la gallerie', style: kBold),
               onTap: () async {
-                final XFile? image =
-                    await _picker.pickImage(source: ImageSource.gallery);
+                final XFile? image = await _picker.pickImage(
+                    source: ImageSource.gallery,
+                    imageQuality: widget.rad ? 30 : 10);
                 Navigator.of(context)
                     .pop(image != null ? File(image.path) : null);
               }),
@@ -34,8 +35,9 @@ class _GetImageState extends State<GetImage> {
             leading: const Icon(Icons.photo_camera),
             title: const Text('Camera', style: kBold),
             onTap: () async {
-              final XFile? image =
-                  await _picker.pickImage(source: ImageSource.camera);
+              final XFile? image = await _picker.pickImage(
+                  source: ImageSource.camera,
+                  imageQuality: widget.rad ? 20 : 10);
 
               image != null
                   ? Navigator.of(context).pop(File(image.path))

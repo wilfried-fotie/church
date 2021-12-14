@@ -1,13 +1,13 @@
 import 'dart:io';
-
+// import 'package:audioplayers/audioplayers.dart';
 import 'package:church/helper/extention.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:open_file/open_file.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../Model/MusiqueModel.dart';
 import '../../Services/FileManager.dart';
 import '../../Services/MusiqueServices.dart';
@@ -20,8 +20,9 @@ class Musiques extends StatefulWidget {
   State<Musiques> createState() => _MusiquesState();
 }
 
-class _MusiquesState extends State<Musiques> {
-  final player = AudioPlayer();
+class _MusiquesState extends State<Musiques> with WidgetsBindingObserver {
+  // AudioPlayer player = AudioPlayer(mode: PlayerMode.LOW_LATENCY);
+
   late ScrollController scroll = ScrollController();
   // ignore: constant_identifier_names
   static const int PEERPAGE = 20;
@@ -32,6 +33,7 @@ class _MusiquesState extends State<Musiques> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance?.addObserver(this);
     scroll.addListener(_scrollListener);
   }
 
@@ -76,19 +78,31 @@ class _MusiquesState extends State<Musiques> {
                                           icon: const Icon(Icons.play_arrow),
                                           onPressed: () async {
                                             try {
-                                              data[index].download == null
+                                              data[index].download == null ||
+                                                      !data[index]
+                                                          .download!
+                                                          .contains(FirebaseAuth
+                                                              .instance
+                                                              .currentUser!
+                                                              .uid)
                                                   ? setState(() {
                                                       pause = index;
                                                     })
                                                   : null;
-                                              data[index].download == null
-                                                  ? await player.setUrl(
-                                                      data[index].musique!)
+
+                                              data[index].download == null ||
+                                                      !data[index]
+                                                          .download!
+                                                          .contains(FirebaseAuth
+                                                              .instance
+                                                              .currentUser!
+                                                              .uid)
+                                                  ?
+                                                  // await player.play(
+                                                  //     data[index].musique!)
+                                                  null
                                                   : await OpenFile.open(
                                                       data[index].localUrl);
-                                              data[index].download == null
-                                                  ? player.play()
-                                                  : null;
                                             } catch (e) {
                                               setState(() {
                                                 pause = null;
@@ -106,7 +120,7 @@ class _MusiquesState extends State<Musiques> {
                                           icon: const Icon(Icons.pause),
                                           onPressed: () async {
                                             try {
-                                              player.pause();
+                                              // player.pause();
                                             } catch (e) {
                                               Fluttertoast.showToast(
                                                   msg:
@@ -123,7 +137,7 @@ class _MusiquesState extends State<Musiques> {
                                   IconButton(
                                       onPressed: () async {
                                         try {
-                                          player.stop();
+                                          // player.stop();
                                           setState(() {
                                             pause = null;
                                           });
@@ -164,7 +178,11 @@ class _MusiquesState extends State<Musiques> {
                                                       .then((value) {
                                                     MusiqueServices()
                                                         .simpleUpdateMusique({
-                                                      "download": true,
+                                                      "download": FieldValue
+                                                          .arrayUnion([
+                                                        FirebaseAuth.instance
+                                                            .currentUser!.uid
+                                                      ]),
                                                       "localUrl": value
                                                     }, data[index].id!);
                                                   });

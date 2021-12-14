@@ -59,7 +59,7 @@ class UserServices {
         .catchError((error) => print("Failed to update user: $error"));
   }
 
-  Future<void> simpleUpdateUser(Map<String, dynamic?> data, String doc) async {
+  Future<void> simpleUpdateUser(Map<String, dynamic> data, String doc) async {
     await medRef
         .doc(doc)
         .update(data)

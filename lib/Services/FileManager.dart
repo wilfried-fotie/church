@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:flutter/material.dart';
+// ignore: library_prefixes
 import 'package:path/path.dart' as Path;
+// ignore: library_prefixes
 import 'package:path_provider/path_provider.dart' as Path2;
 
 class FileMananger {
@@ -17,8 +18,7 @@ class FileMananger {
     var time = DateTime.now().millisecondsSinceEpoch.toString();
     String ext = Path.basename(file.path).split(".")[1].toString();
     try {
-      firebase_storage.Reference ref = await firebase_storage
-          .FirebaseStorage.instance
+      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
           .ref(bucket + "/" + time + "." + ext);
       firebase_storage.UploadTask upload = ref.putFile(file);
       var end = await upload.then((p0) => p0.ref);
@@ -48,10 +48,8 @@ class FileMananger {
       await firebase_storage.FirebaseStorage.instance
           .refFromURL(ref)
           .writeToFile(downloadToFile);
-      print(appDocDir.path + "/" + title);
       return appDocDir.path + "/" + title;
     } catch (e) {
-      print(e);
       // throw Exception("Firestore error");
     }
   }

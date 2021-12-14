@@ -6,7 +6,7 @@ class MusiqueModel {
   final int? prix;
 
   final bool status;
-  final bool? download;
+  final List? download;
 
   String? tel;
 
@@ -35,7 +35,7 @@ class MusiqueModel {
             tel: json["tel"] as String?,
             localUrl: json["localUrl"] as String?,
             status: json["status"]! as bool,
-            download: json["download"] as bool?,
+            download: json["download"] as List?,
             id: id);
 
   Map<String, Object?> toJson() {

@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../Services/FileManager.dart';
+import '../Widgets/SmallButton.dart';
 import '../Widgets/getImage.dart';
 
 class UpdateProfil extends StatefulWidget {
@@ -57,12 +58,11 @@ class _UpdateProfilState extends State<UpdateProfil> {
           onTap: () {
             FocusScope.of(context).unfocus();
           },
-          child: StreamBuilder<UserModel>(
+          child: StreamBuilder<UserModel?>(
               stream: _medData.getStreamUser(_auth!.uid),
               builder: (context, snapshot) {
                 UserModel? data = snapshot.data;
-                _name.text = data!.name;
-                print(data);
+                _name.text = data != null ? data.name : "";
                 return ListView(
                   children: [
                     Container(
@@ -78,28 +78,44 @@ class _UpdateProfilState extends State<UpdateProfil> {
                             const SizedBox(
                               height: 20,
                             ),
-                            Container(
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: kPrimaryColor,
-                                  border: Border.all(
-                                      color: kPrimaryColor, width: 10)),
-                              child: ClipRRect(
-                                child: CachedNetworkImage(
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                  imageUrl: data!.photo,
-                                  placeholder: (context, url) => const SizedBox(
-                                    child: Center(
-                                        child: CircularProgressIndicator(
-                                      color: kPrimaryColor,
-                                    )),
+                            data != null && !_loader
+                                ? Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: kSecondaryColor,
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(50),
+                                      child: Semantics(
+                                        label: "image picker",
+                                        child: CachedNetworkImage(
+                                          height: 100,
+                                          width: 100,
+                                          fit: BoxFit.cover,
+                                          imageUrl: data.photo!,
+                                          placeholder: (context, url) =>
+                                              const SizedBox(
+                                            child: Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                              color: kPrimaryColor,
+                                            )),
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
+                                        ),
+                                      ),
+                                    ))
+                                : Container(
+                                    height: 100,
+                                    width: 100,
+                                    child: const FittedBox(
+                                      child:
+                                          Icon(Icons.person, color: kTextColor),
+                                    ),
+                                    decoration: const BoxDecoration(
+                                        shape: BoxShape.circle),
                                   ),
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error),
-                                ),
-                              ),
-                            ),
                             IconButton(
                                 onPressed: () async {
                                   final result = await showModalBottomSheet(
@@ -112,19 +128,15 @@ class _UpdateProfilState extends State<UpdateProfil> {
                                       _loader = true;
                                     });
                                     try {
+                                      data!.photo != null
+                                          ? await FileMananger.delete(
+                                              data.photo!)
+                                          : null;
                                       await FileMananger.uploadFile(
                                               result!.path, "Users")
                                           .then((value) {
-                                        // _medData.updateUser(
-                                        //     UserModel(
-                                        //         name: data.name, photo: value!),
-                                        //     _auth!.uid);
-
-                                        _medData.setUser(
-                                            UserModel(
-                                                name: _name.value.text,
-                                                photo: value!),
-                                            _auth!.uid);
+                                        _medData.simpleUpdateUser(
+                                            {"photo": value}, _auth!.uid);
 
                                         setState(() {
                                           _loader = false;
@@ -152,37 +164,23 @@ class _UpdateProfilState extends State<UpdateProfil> {
                             const SizedBox(
                               height: 40,
                             ),
-                            CustomButton(
-                                title: "Mofifier votre profil",
-                                onClick: () async {
-                                  FocusScope.of(context).unfocus;
-                                  if (nameKey.currentState!.validate()) {
-                                    if (_image != null) {
-                                      try {
-                                        FileMananger.uploadFile(
-                                                _image!.path, "Users")
-                                            .then((value) {
-                                          _medData.updateUser(
-                                              UserModel(
-                                                  name: _name.value.text,
-                                                  photo: value!),
-                                              _auth!.uid);
-
-                                          _name.clear();
-                                          setState(() {
-                                            _image = null;
-                                          });
-                                        });
-                                      } catch (e) {
-                                        Fluttertoast.showToast(
-                                            msg: "Une erreur est survenu !!! ",
-                                            backgroundColor: Colors.red,
-                                            fontSize: 18,
-                                            textColor: Colors.white);
-                                      }
+                            Container(
+                              alignment: Alignment.center,
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 100),
+                              child: SmallButton(
+                                  title: "Enregistrer ",
+                                  onClick: () async {
+                                    FocusScope.of(context).unfocus;
+                                    if (nameKey.currentState!.validate()) {
+                                      _medData.simpleUpdateUser(
+                                          {"name": _name.value.text},
+                                          _auth!.uid);
+                                      FocusScope.of(context).unfocus();
+                                      Navigator.of(context).pop();
                                     }
-                                  }
-                                }),
+                                  }),
+                            ),
                             const SizedBox(
                               height: 30,
                             ),

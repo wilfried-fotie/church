@@ -6,7 +6,7 @@ class LivreModel {
   final int? prix;
 
   final bool status;
-  final bool? download;
+  final List? download;
 
   final String? image, tel;
 
@@ -37,7 +37,7 @@ class LivreModel {
             date: json["date"] as String?,
             pdf: json["pdf"] as String?,
             tel: json["tel"] as String?,
-            download: json["download"] as bool?,
+            download: json["download"] as List?,
             localFile: json["localFile"] as String?,
             status: json["status"]! as bool,
             id: id);

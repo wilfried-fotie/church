@@ -103,11 +103,15 @@ class _MyAppState extends State<MyApp> {
                             color: kTextColor),
                         0),
                     buildBottomNavigationBarItem(
-                        SvgPicture.asset("asset/img/icons/group.svg",
-                            semanticsLabel: 'Groupes actif',
-                            color: kPrimaryColor),
-                        SvgPicture.asset("asset/img/icons/group.svg",
-                            semanticsLabel: 'Groupes', color: kTextColor),
+                        // SvgPicture.asset("asset/img/icons/group.svg",
+                        //     semanticsLabel: 'Groupes actif',
+                        //     color: kPrimaryColor),
+                        const Icon(CupertinoIcons.group,
+                            size: 30, color: kPrimaryColor),
+                        const Icon(
+                          CupertinoIcons.group,
+                          size: 30,
+                        ),
                         1),
                     buildBottomNavigationBarItem(
                         SvgPicture.asset("asset/img/icons/home-simple-door.svg",

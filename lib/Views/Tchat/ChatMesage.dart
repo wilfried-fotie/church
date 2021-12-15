@@ -8,11 +8,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+// ignore: implementation_imports
 import 'package:provider/src/provider.dart';
 
 import '../../Model/UserModel.dart';
@@ -20,6 +19,7 @@ import '../../Services/FileManager.dart';
 import '../../Services/GroupesServeices.dart';
 import '../../Services/MessageServices.dart';
 import '../../Services/UserServices.dart';
+import '../Widgets/EditGroupe.dart';
 import '../Widgets/getImage.dart';
 
 class ChatMesage extends StatefulWidget {
@@ -133,6 +133,19 @@ class _ChatMesageState extends State<ChatMesage> {
                 Text(widget.group["groupName"]),
               ],
             ),
+            actions: _auth!.uid == widget.group['admin']
+                ? [
+                    IconButton(
+                        icon: const Icon(Icons.more_horiz),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      EditGroupe(widget.group)));
+                        }),
+                  ]
+                : [],
           ),
           body: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

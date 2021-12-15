@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 
 import 'Admin/Home.dart';
+import 'Creator.dart';
 import 'Widgets/Iconiseur.dart';
 import 'auth/SignIn.dart';
 import 'auth/UpdateProfil.dart';
@@ -134,32 +135,33 @@ class _SettingsState extends State<Settings> {
                 context, MaterialPageRoute(builder: (_) => const SignIn()));
           },
         ),
+
         const SizedBox(
           height: 10,
         ),
-        ListTile(
-          enableFeedback: true,
-          title: const Text(
-            "À  Propos de nous",
-            style: TextStyle(fontFamily: "Noto", fontWeight: FontWeight.bold),
-          ),
-          leading: const Iiconiseur(icon: Icon(Icons.art_track_rounded)),
-          onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (_) => const Registration()));
-          },
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        ListTile(
-          title: const Text(
-            "Aide",
-            style: TextStyle(fontFamily: "Noto", fontWeight: FontWeight.bold),
-          ),
-          leading: const Iiconiseur(icon: Icon(Icons.help)),
-          onTap: () async {},
-        ),
+        // ListTile(
+        //   enableFeedback: true,
+        //   title: const Text(
+        //     "À  Propos de nous",
+        //     style: TextStyle(fontFamily: "Noto", fontWeight: FontWeight.bold),
+        //   ),
+        //   leading: const Iiconiseur(icon: Icon(Icons.art_track_rounded)),
+        //   onTap: () {
+        //     Navigator.push(context,
+        //         MaterialPageRoute(builder: (_) => const Registration()));
+        //   },
+        // ),
+        // const SizedBox(
+        //   height: 10,
+        // ),
+        // ListTile(
+        //   title: const Text(
+        //     "Aide",
+        //     style: TextStyle(fontFamily: "Noto", fontWeight: FontWeight.bold),
+        //   ),
+        //   leading: const Iiconiseur(icon: Icon(Icons.help)),
+        //   onTap: () async {},
+        // ),
         const SizedBox(
           height: 10,
         ),
@@ -237,6 +239,8 @@ class _SettingsState extends State<Settings> {
             ),
             leading: const Iiconiseur(icon: Icon(Icons.info)),
             onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => const Creator()));
               context.read<MyLogin>().toggleStatus();
             },
           ),

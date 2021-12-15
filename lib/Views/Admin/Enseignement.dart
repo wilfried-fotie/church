@@ -344,6 +344,7 @@ class _EnseignementStructureState extends State<EnseignementStructure> {
                                 onPressed: () async {
                                   try {
                                     await _medData.delete(widget.data.id!);
+                                    Navigator.of(context).pop();
                                   } catch (e) {
                                     Fluttertoast.showToast(
                                         msg: "Une erreur est survenu",
@@ -351,13 +352,13 @@ class _EnseignementStructureState extends State<EnseignementStructure> {
                                         fontSize: 18,
                                         textColor: Colors.white);
                                   } finally {
-                                    Navigator.of(context).pop(false);
+                                    Navigator.of(context).pop();
                                   }
                                 },
                                 child: const Text("Supprimer")),
                             TextButton(
                                 onPressed: () {
-                                  Navigator.of(context).pop(false);
+                                  Navigator.of(context).pop();
                                 },
                                 child: const Text("Annuler")),
                           ],

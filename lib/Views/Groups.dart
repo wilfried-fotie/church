@@ -61,7 +61,7 @@ class _GroupsState extends State<Groups> {
                                     : Alignment.bottomCenter,
                                 children: [
                                   FractionallySizedBox(
-                                      heightFactor: 0.6,
+                                      heightFactor: 1,
                                       child: Container(
                                           decoration: const BoxDecoration(
                                               color: Colors.white,
@@ -74,224 +74,220 @@ class _GroupsState extends State<Groups> {
                                                 FocusScope.of(context)
                                                     .unfocus();
                                               },
-                                              child: SingleChildScrollView(
-                                                  reverse: true,
-                                                  child: Form(
-                                                      key: key,
-                                                      child: GestureDetector(
-                                                          onTap: () {
-                                                            FocusScope.of(
-                                                                    context)
-                                                                .unfocus();
-                                                          },
-                                                          child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceEvenly,
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
-                                                              children: [
-                                                                Container(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .bottomRight,
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .only(
-                                                                        top:
-                                                                            5.0,
-                                                                        right:
-                                                                            5),
-                                                                    child: IconButton(
-                                                                        onPressed: () {
-                                                                          clear();
-                                                                          Navigator.of(context)
-                                                                              .pop(false);
-                                                                        },
-                                                                        icon: const Icon(Icons.close)),
+                                              child: SafeArea(
+                                                child: SingleChildScrollView(
+                                                    child: Form(
+                                                        key: key,
+                                                        child: GestureDetector(
+                                                            onTap: () {
+                                                              FocusScope.of(
+                                                                      context)
+                                                                  .unfocus();
+                                                            },
+                                                            child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceEvenly,
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .max,
+                                                                children: [
+                                                                  // Container(
+                                                                  //   alignment:
+                                                                  //       Alignment
+                                                                  //           .bottomRight,
+                                                                  //   child:
+                                                                  //       Padding(
+                                                                  //     padding: const EdgeInsets
+                                                                  //             .only(
+                                                                  //         top:
+                                                                  //             5.0,
+                                                                  //         right:
+                                                                  //             5),
+                                                                  //     child: IconButton(
+                                                                  //         onPressed: () {
+                                                                  //           clear();
+                                                                  //           Navigator.of(context)
+                                                                  //               .pop(false);
+                                                                  //         },
+                                                                  //         icon: const Icon(Icons.close)),
+                                                                  //   ),
+                                                                  // ),
+                                                                  const SizedBox(
+                                                                    height: 20,
                                                                   ),
-                                                                ),
-                                                                const Text(
-                                                                  "Ajouter Un Groupe",
-                                                                  style:
-                                                                      kBoldText,
-                                                                ),
-                                                                const SizedBox(
-                                                                    height: 20),
-                                                                _image != null
-                                                                    ? ClipRRect(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(
-                                                                                50),
-                                                                        child:
-                                                                            Semantics(
-                                                                          label:
-                                                                              "image picker",
+                                                                  AppBar(
+                                                                    title:
+                                                                        const Text(
+                                                                      "Ajouter Un Groupe",
+                                                                    ),
+                                                                  ),
+                                                                  // const Text(
+                                                                  //   "Ajouter Un Groupe",
+                                                                  //   style:
+                                                                  //       kBoldTextPrimaryColor,
+                                                                  // ),
+                                                                  const SizedBox(
+                                                                      height:
+                                                                          20),
+                                                                  _image != null
+                                                                      ? ClipRRect(
+                                                                          borderRadius: BorderRadius.circular(
+                                                                              50),
                                                                           child:
-                                                                              Image.file(
-                                                                            File(_image!.path),
-                                                                            width:
-                                                                                100,
-                                                                            height:
-                                                                                100,
-                                                                            fit:
-                                                                                BoxFit.cover,
-                                                                          ),
-                                                                        ))
-                                                                    : const CircleAvatar(
-                                                                        backgroundImage:
-                                                                            AssetImage("asset/img/logo.png"),
-                                                                      ),
-                                                                Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .only(
-                                                                        top:
-                                                                            5.0,
-                                                                        right:
-                                                                            5),
-                                                                    child: Row(
-                                                                      children: [
-                                                                        const Align(
-                                                                          alignment:
-                                                                              Alignment.topLeft,
-                                                                          child:
-                                                                              Padding(
-                                                                            padding:
-                                                                                EdgeInsets.only(left: 25.0),
+                                                                              Semantics(
+                                                                            label:
+                                                                                "image picker",
                                                                             child:
-                                                                                Text(
-                                                                              "Importer l'image du groupe",
-                                                                              style: TextStyle(fontSize: 18),
+                                                                                Image.file(
+                                                                              File(_image!.path),
+                                                                              width: 100,
+                                                                              height: 100,
+                                                                              fit: BoxFit.cover,
+                                                                            ),
+                                                                          ))
+                                                                      : const CircleAvatar(
+                                                                          backgroundImage:
+                                                                              AssetImage("asset/img/logo.png"),
+                                                                        ),
+                                                                  Padding(
+                                                                      padding: const EdgeInsets
+                                                                              .only(
+                                                                          top:
+                                                                              5.0,
+                                                                          right:
+                                                                              5),
+                                                                      child:
+                                                                          Row(
+                                                                        children: [
+                                                                          const Align(
+                                                                            alignment:
+                                                                                Alignment.topLeft,
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: EdgeInsets.only(left: 25.0),
+                                                                              child: Text(
+                                                                                "Importer l'image du groupe",
+                                                                                style: TextStyle(fontSize: 18),
+                                                                              ),
                                                                             ),
                                                                           ),
-                                                                        ),
-                                                                        const SizedBox(
-                                                                            width:
-                                                                                20),
-                                                                        IconButton(
-                                                                            onPressed:
-                                                                                () async {
-                                                                              try {
-                                                                                final result = await showModalBottomSheet(
-                                                                                    context: context,
-                                                                                    builder: (BuildContext bc) {
-                                                                                      return const GetImage(rad: true);
-                                                                                    });
+                                                                          const SizedBox(
+                                                                              width: 20),
+                                                                          IconButton(
+                                                                              onPressed: () async {
+                                                                                try {
+                                                                                  final result = await showModalBottomSheet(
+                                                                                      context: context,
+                                                                                      builder: (BuildContext bc) {
+                                                                                        return const GetImage(rad: true);
+                                                                                      });
 
-                                                                                setState(() {
-                                                                                  _image = result;
-                                                                                });
-                                                                              } catch (err) {
-                                                                                print(err);
-                                                                                print("err");
-                                                                              }
-                                                                            },
-                                                                            icon:
-                                                                                const Icon(Icons.photo_camera)),
-                                                                      ],
-                                                                    )),
-                                                                const SizedBox(
-                                                                    height: 20),
-                                                                Padding(
-                                                                  padding: const EdgeInsets
-                                                                          .only(
-                                                                      left:
-                                                                          20.0,
-                                                                      right:
+                                                                                  setState(() {
+                                                                                    _image = result;
+                                                                                  });
+                                                                                } catch (err) {
+                                                                                  print(err);
+                                                                                  print("err");
+                                                                                }
+                                                                              },
+                                                                              icon: const Icon(Icons.photo_camera)),
+                                                                        ],
+                                                                      )),
+                                                                  const SizedBox(
+                                                                      height:
                                                                           20),
-                                                                  child:
-                                                                      TextFormField(
-                                                                    autovalidateMode:
-                                                                        AutovalidateMode
-                                                                            .onUserInteraction,
-                                                                    controller:
-                                                                        name,
-                                                                    validator:
-                                                                        (value) {
-                                                                      if (value!
-                                                                          .trim()
-                                                                          .isEmpty)
-                                                                        return "Ce champ est réquis";
-                                                                      if (value
-                                                                              .length <
-                                                                          3)
-                                                                        return "Ce champ doit faire au moins 3 caractères";
-                                                                      if (value
-                                                                              .length >
-                                                                          255)
-                                                                        return "Ce champ doit faire au max 255 caractères";
-                                                                    },
-                                                                    decoration: inputStyle.copyWith(
-                                                                        labelText:
-                                                                            "Nom du groupe"),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .only(
+                                                                        left:
+                                                                            20.0,
+                                                                        right:
+                                                                            20),
+                                                                    child:
+                                                                        TextFormField(
+                                                                      autovalidateMode:
+                                                                          AutovalidateMode
+                                                                              .onUserInteraction,
+                                                                      controller:
+                                                                          name,
+                                                                      validator:
+                                                                          (value) {
+                                                                        if (value!
+                                                                            .trim()
+                                                                            .isEmpty)
+                                                                          return "Ce champ est réquis";
+                                                                        if (value.length <
+                                                                            3)
+                                                                          return "Ce champ doit faire au moins 3 caractères";
+                                                                        if (value.length >
+                                                                            255)
+                                                                          return "Ce champ doit faire au max 255 caractères";
+                                                                      },
+                                                                      decoration:
+                                                                          inputStyle.copyWith(
+                                                                              labelText: "Nom du groupe"),
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                                const SizedBox(
-                                                                    height: 20),
-                                                                Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceEvenly,
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .max,
-                                                                  children: [
-                                                                    SmallButton(
-                                                                        title:
-                                                                            "Créer le groupe",
-                                                                        onClick:
-                                                                            () async {
-                                                                          try {
-                                                                            if (key.currentState!.validate() &&
-                                                                                _image == null) {
-                                                                              setState(() {
-                                                                                loader = true;
-                                                                              });
-                                                                              UserModel user = await UserServices().getUser(_auth!.uid);
-                                                                              await DatabaseService(uid: user.id).createGroup(user.name, name.value.text, null);
-                                                                              Navigator.of(context).pop();
-                                                                              clear();
-                                                                              FocusScope.of(context).unfocus();
-                                                                            }
-
-                                                                            if (key.currentState!.validate() &&
-                                                                                _image != null) {
-                                                                              setState(() {
-                                                                                loader = true;
-                                                                              });
-                                                                              FileMananger.uploadFile(_image!.path, "Group").then((value) async {
-                                                                                UserModel user = await UserServices().getUser(_auth!.uid);
-                                                                                await DatabaseService(uid: user.id).createGroup(user.name, name.value.text, value).then((value) {
-                                                                                  Navigator.of(context).pop();
-                                                                                  clear();
-                                                                                  FocusScope.of(context).unfocus();
+                                                                  const SizedBox(
+                                                                      height:
+                                                                          20),
+                                                                  Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceEvenly,
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .max,
+                                                                    children: [
+                                                                      SmallButton(
+                                                                          title:
+                                                                              "Créer le groupe",
+                                                                          onClick:
+                                                                              () async {
+                                                                            try {
+                                                                              if (key.currentState!.validate() && _image == null) {
+                                                                                setState(() {
+                                                                                  loader = true;
                                                                                 });
-                                                                              });
-                                                                            }
-                                                                          } catch (err) {
-                                                                            Fluttertoast.showToast(
-                                                                                msg: "Une erreur est survenu !!! ",
-                                                                                backgroundColor: Colors.red,
-                                                                                fontSize: 18,
-                                                                                textColor: Colors.white);
-                                                                            FocusScope.of(context).unfocus();
-                                                                          } finally {}
-                                                                        }),
-                                                                    TextButton(
-                                                                        onPressed:
-                                                                            () {
-                                                                          clear();
+                                                                                UserModel user = await UserServices().getUser(_auth!.uid);
+                                                                                await DatabaseService(uid: user.id).createGroup(user.name, name.value.text, null);
+                                                                                Navigator.of(context).pop();
+                                                                                clear();
+                                                                                FocusScope.of(context).unfocus();
+                                                                              }
 
-                                                                          Navigator.of(context)
-                                                                              .pop();
-                                                                        },
-                                                                        child: const Text(
-                                                                            "Annuler"))
-                                                                  ],
-                                                                ),
-                                                              ]))))))),
+                                                                              if (key.currentState!.validate() && _image != null) {
+                                                                                setState(() {
+                                                                                  loader = true;
+                                                                                });
+                                                                                FileMananger.uploadFile(_image!.path, "Group").then((value) async {
+                                                                                  UserModel user = await UserServices().getUser(_auth!.uid);
+                                                                                  await DatabaseService(uid: user.id).createGroup(user.name, name.value.text, value).then((value) {
+                                                                                    Navigator.of(context).pop();
+                                                                                    clear();
+                                                                                    FocusScope.of(context).unfocus();
+                                                                                  });
+                                                                                });
+                                                                              }
+                                                                            } catch (err) {
+                                                                              Fluttertoast.showToast(msg: "Une erreur est survenu !!! ", backgroundColor: Colors.red, fontSize: 18, textColor: Colors.white);
+                                                                              FocusScope.of(context).unfocus();
+                                                                            } finally {}
+                                                                          }),
+                                                                      TextButton(
+                                                                          onPressed:
+                                                                              () {
+                                                                            clear();
+
+                                                                            Navigator.of(context).pop();
+                                                                          },
+                                                                          child:
+                                                                              const Text("Annuler"))
+                                                                    ],
+                                                                  ),
+                                                                ])))),
+                                              )))),
                                   loader
                                       ? const Center(
                                           child: CircularProgressIndicator(
@@ -585,11 +581,15 @@ class _GroupsState extends State<Groups> {
                                         children: [
                                           !membres.contains(_auth!.uid)
                                               ? TextButton(
-                                                  onPressed: () {
-                                                    DatabaseService(
+                                                  onPressed: () async {
+                                                    await DatabaseService(
                                                             uid: _auth!.uid)
                                                         .updateGroupUser(
-                                                            data["groupId"]);
+                                                            data["groupId"])
+                                                        .then((value) =>
+                                                            print("Change"))
+                                                        .catchError(
+                                                            (e) => print(e));
                                                   },
                                                   child: Row(
                                                     crossAxisAlignment:
@@ -612,12 +612,11 @@ class _GroupsState extends State<Groups> {
                                                   ),
                                                 )
                                               : TextButton(
-                                                  onPressed: () {
+                                                  onPressed: () async {
                                                     DatabaseService(
                                                             uid: _auth!.uid)
                                                         .updateRemoveGroupUser(
                                                             data["groupId"]);
-                                                    setState(() {});
                                                   },
                                                   child: Row(
                                                     crossAxisAlignment:

@@ -56,7 +56,6 @@ dependencies:
   url_launcher: ^6.0.17
   syncfusion_flutter_pdfviewer: ^19.3.57-beta
   flutter_phone_direct_caller: ^2.1.0
-  audioplayers: ^0.20.1
 
  
   
@@ -108,12 +107,12 @@ flutter:
   fonts:
     - family: Noto
       fonts:
-        - asset: asset/font/Google Font/ProductSans-Regular.ttf
-        - asset: asset/font/Google Font/ProductSans-Medium.ttf
+        - asset: asset/font/Font/ProductSans-Regular.ttf
+        - asset: asset/font/Font/ProductSans-Medium.ttf
           weight: 700
-        - asset: asset/font/Google Font/ProductSans-Bold.ttf
+        - asset: asset/font/Font/ProductSans-Bold.ttf
           weight: 600
-        - asset: asset/font/Google Font/ProductSans-Black.ttf
+        - asset: asset/font/Font/ProductSans-Black.ttf
           weight: 900
 
 

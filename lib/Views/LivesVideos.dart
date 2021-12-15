@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 // import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -11,6 +13,9 @@ class LivesVideos extends StatelessWidget {
 
   Future<bool?> _makePhoneCall(String phoneNumber) async {
     // bool? res = await FlutterPhoneDirectCaller.callNumber(phoneNumber);
+
+    //set the number here
+    bool? res = await FlutterPhoneDirectCaller.callNumber(phoneNumber);
 
     // return res;
   }
@@ -127,26 +132,43 @@ class LivesVideos extends StatelessWidget {
                         context: context,
                         builder: (context) {
                           return SimpleDialog(
-                            title: const Text("Merci Pour Votre Contribution"),
+                            title: const Center(
+                                child: Text("Merci Pour Votre Contribution")),
                             children: [
-                              const Text(
-                                  "Sélectionner notre numéro de téléphone pour le copié et le collé lors la transaction"),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              const SelectableText("678615677"),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              const Text("Faire le don par :"),
-                              TextButton(
-                                  onPressed: () {},
-                                  child: const Text("Orange Money")),
-                              TextButton(
-                                  onPressed: () {},
-                                  child: const Text("MTN Mobile Money")),
-                              const SizedBox(
-                                height: 20,
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.all(20.0),
+                                    child: Text(
+                                        "1 -Tapez deux fois notre numéro de téléphone pour le selectionner et le copié. \n 2 - Selectionner Orange money ou MTN money \n 3 - au niveau du numéro de téléphone maintenez le champs jusqu'à voir apparaître coller et cliquer dessus \n \t Merci"),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  const SelectableText("677660862"),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  const SelectableText("678615677"),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  const Text("Faire le don par :"),
+                                  TextButton(
+                                      onPressed: () async {
+                                        await _makePhoneCall("#150#");
+                                      },
+                                      child: const Text("Orange Money")),
+                                  TextButton(
+                                      onPressed: () async {
+                                        await _makePhoneCall("*126#");
+                                      },
+                                      child: const Text("MTN Mobile Money")),
+                                  const SizedBox(
+                                    height: 20,
+                                  )
+                                ],
                               )
                             ],
                           );

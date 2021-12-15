@@ -156,7 +156,11 @@ class _LivresViewState extends State<LivresView> {
                       );
                     });
               } else {
-                return const Text("Une Erreur c'est produite");
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: kPrimaryColor,
+                  ),
+                );
               }
             }));
   }

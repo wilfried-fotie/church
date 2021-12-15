@@ -150,6 +150,27 @@ class Home extends StatelessWidget {
                             ),
                           ],
                         )))),
+                InkWell(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Groupes())),
+                    child: Card(
+                        color: kSecondaryColor,
+                        child: Center(
+                            child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: const [
+                            Icon(CupertinoIcons.group, color: kPrimaryColor),
+                            Text(
+                              "Groupes",
+                              style: kPrimaryText,
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        )))),
               ])),
     );
   }

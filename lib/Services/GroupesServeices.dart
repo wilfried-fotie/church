@@ -47,7 +47,7 @@ class DatabaseService {
     DocumentReference groupDocRef = await groupCollection.add({
       'groupName': groupName,
       'groupIcon': groupIcon,
-      'admin': userName,
+      'admin': uid,
       'members': [],
       //'messages': ,
       'groupId': '',
@@ -148,6 +148,37 @@ class DatabaseService {
     return FirebaseFirestore.instance.collection("groups").snapshots();
   }
 
+  Future<List<MessageModel>> getFutureGroups(
+    String groupId,
+  ) {
+    return FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupId)
+        .collection('messages')
+        .orderBy('date', descending: true)
+        .get()
+        .then((event) => event.docs
+            .map((data) => MessageModel.fromJson(data.data(), data.id))
+            .toList());
+  }
+
+  Stream<Map<String, dynamic>> getFutureGroup(
+    String groupId,
+  ) {
+    return FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupId)
+        .snapshots()
+        .map((event) => event.data()!);
+  }
+
+  Future simpleUpdateUser(Map<String, dynamic> data, String doc) async {
+    await FirebaseFirestore.instance.collection('groups').doc(doc).update({
+      'groupIcon': data["groupIcon"],
+      'groupName': data["groupName"],
+    });
+  }
+
   // send message
   Future<void> sendMessage(String groupId, MessageModel chatMessageData) async {
     FirebaseFirestore.instance
@@ -195,6 +226,15 @@ class DatabaseService {
         .doc(groupId)
         .collection('messages')
         .doc(id)
+        .delete()
+        .then((value) => print("User Deleted"))
+        .catchError((error) => print("Failed to delete user: $error"));
+  }
+
+  Future deleteGroup(String groupId) {
+    return FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupId)
         .delete()
         .then((value) => print("User Deleted"))
         .catchError((error) => print("Failed to delete user: $error"));

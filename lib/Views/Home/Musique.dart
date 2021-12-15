@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:church/helper/extention.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,8 +20,6 @@ class Musiques extends StatefulWidget {
 }
 
 class _MusiquesState extends State<Musiques> with WidgetsBindingObserver {
-  AudioPlayer player = AudioPlayer(mode: PlayerMode.LOW_LATENCY);
-
   late ScrollController scroll = ScrollController();
   // ignore: constant_identifier_names
   static const int PEERPAGE = 20;
@@ -73,102 +70,97 @@ class _MusiquesState extends State<Musiques> with WidgetsBindingObserver {
                               padding: const EdgeInsets.only(top: 8.0),
                               child: Row(
                                 children: [
-                                  pause != index
-                                      ? IconButton(
-                                          icon: const Icon(Icons.play_arrow),
-                                          onPressed: () async {
-                                            try {
-                                              data[index].download == null ||
-                                                      !data[index]
+                                  !(data[index].download == null ||
+                                          !data[index].download!.contains(
+                                              FirebaseAuth
+                                                  .instance.currentUser!.uid))
+                                      ? data[index].status == false
+                                          ? pause != index &&
+                                                  (data[index].download ==
+                                                          null ||
+                                                      data[index]
                                                           .download!
                                                           .contains(FirebaseAuth
                                                               .instance
                                                               .currentUser!
-                                                              .uid)
-                                                  ? setState(() {
-                                                      pause = index;
-                                                    })
-                                                  : null;
+                                                              .uid))
+                                              ? IconButton(
+                                                  icon: const Icon(
+                                                      Icons.play_arrow),
+                                                  onPressed: () async {
+                                                    try {
+                                                      data[index].download ==
+                                                                  null ||
+                                                              !data[index]
+                                                                  .download!
+                                                                  .contains(FirebaseAuth
+                                                                      .instance
+                                                                      .currentUser!
+                                                                      .uid)
+                                                          ? setState(() {
+                                                              pause = index;
+                                                            })
+                                                          : null;
 
-                                              if (data[index].download ==
-                                                      null ||
-                                                  !data[index]
-                                                      .download!
-                                                      .contains(FirebaseAuth
-                                                          .instance
-                                                          .currentUser!
-                                                          .uid)) {
-                                                var url =
-                                                    (data[index].musique!);
-                                                int result =
-                                                    await player.play(url);
+                                                      if (data[index]
+                                                                  .download ==
+                                                              null ||
+                                                          !data[index]
+                                                              .download!
+                                                              .contains(
+                                                                  FirebaseAuth
+                                                                      .instance
+                                                                      .currentUser!
+                                                                      .uid)) {
+                                                        var url = (data[index]
+                                                            .musique!);
+                                                      } else {
+                                                        await OpenFile.open(
+                                                            data[index]
+                                                                .localUrl);
+                                                      }
+                                                    } catch (e) {
+                                                      if (mounted) {
+                                                        setState(() {
+                                                          pause = null;
+                                                        });
+                                                      }
 
-                                                if (result == 1) {
-                                                  print("read");
-                                                } else {
-                                                  Fluttertoast.showToast(
-                                                      msg:
-                                                          "Une erreur est survenu veuillez télécharger !!! ",
-                                                      backgroundColor:
-                                                          Colors.red,
-                                                      fontSize: 18,
-                                                      textColor: Colors.white);
-                                                }
-                                              } else {
-                                                await OpenFile.open(
-                                                    data[index].localUrl);
-                                              }
-                                            } catch (e) {
-                                              setState(() {
-                                                pause = null;
-                                              });
-                                              Fluttertoast.showToast(
-                                                  msg:
-                                                      "Une erreur est survenu veuillez télécharger !!! ",
-                                                  backgroundColor: Colors.red,
-                                                  fontSize: 18,
-                                                  textColor: Colors.white);
-                                            }
-                                          },
-                                        )
-                                      : IconButton(
-                                          icon: const Icon(Icons.pause),
-                                          onPressed: () async {
-                                            try {
-                                              player.pause();
-                                              setState(() {
-                                                pause = null;
-                                              });
-                                            } catch (e) {
-                                              Fluttertoast.showToast(
-                                                  msg:
-                                                      "Une erreur est survenu !!! ",
-                                                  backgroundColor: Colors.red,
-                                                  fontSize: 18,
-                                                  textColor: Colors.white);
-                                            }
-                                          },
-                                        ),
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              "Une erreur est survenu veuillez télécharger !!! ",
+                                                          backgroundColor:
+                                                              Colors.red,
+                                                          fontSize: 18,
+                                                          textColor:
+                                                              Colors.white);
+                                                    }
+                                                  },
+                                                )
+                                              : IconButton(
+                                                  icon: const Icon(Icons.pause),
+                                                  onPressed: () async {
+                                                    try {
+                                                      setState(() {
+                                                        pause = null;
+                                                      });
+                                                    } catch (e) {
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              "Une erreur est survenu !!! ",
+                                                          backgroundColor:
+                                                              Colors.red,
+                                                          fontSize: 18,
+                                                          textColor:
+                                                              Colors.white);
+                                                    }
+                                                  },
+                                                )
+                                          : Container()
+                                      : Container(),
                                   const SizedBox(
                                     width: 20,
                                   ),
-                                  IconButton(
-                                      onPressed: () async {
-                                        try {
-                                          player.stop();
-                                          setState(() {
-                                            pause = null;
-                                          });
-                                        } catch (e) {
-                                          Fluttertoast.showToast(
-                                              msg:
-                                                  "Une erreur est survenu !!! ",
-                                              backgroundColor: Colors.red,
-                                              fontSize: 18,
-                                              textColor: Colors.white);
-                                        }
-                                      },
-                                      icon: const Icon(Icons.stop)),
                                   const SizedBox(
                                     width: 20,
                                   ),
@@ -177,106 +169,114 @@ class _MusiquesState extends State<Musiques> with WidgetsBindingObserver {
                                           color: kPrimaryColor,
                                         )
                                       : Container(),
-                                  (data[index].download == null ||
-                                          !data[index].download!.contains(
-                                              FirebaseAuth
-                                                  .instance.currentUser!.uid))
-                                      ? data[index].status == false
-                                          ? IconButton(
-                                              icon: Row(
-                                                children: [
-                                                  _loader
-                                                      ? const CircularProgressIndicator(
-                                                          color: kPrimaryColor)
-                                                      : const Icon(
-                                                          Icons.download),
-                                                ],
-                                              ),
-                                              onPressed: () async {
-                                                setState(() {
-                                                  _loader = true;
-                                                });
-                                                try {
-                                                  FileMananger.downloadFile(
-                                                          data[index].musique!,
-                                                          data[index]
-                                                                  .titre
-                                                                  .replaceAll(
-                                                                      " ", "") +
-                                                              ".mp3")
-                                                      .then((value) {
-                                                    MusiqueServices()
-                                                        .simpleUpdateMusique({
-                                                      "download": FieldValue
-                                                          .arrayUnion([
-                                                        FirebaseAuth.instance
-                                                            .currentUser!.uid
-                                                      ]),
-                                                      "localUrl": value
-                                                    }, data[index].id!);
-                                                  });
-                                                } catch (error) {
-                                                  Fluttertoast.showToast(
-                                                      msg: "Downloaded Error",
-                                                      backgroundColor:
-                                                          Colors.red,
-                                                      fontSize: 18,
-                                                      textColor: Colors.white);
-                                                } finally {
-                                                  setState(() {
-                                                    _loader = false;
-                                                  });
-                                                }
-                                              },
-                                            )
-                                          : InkWell(
-                                              onTap: () async {
-                                                String whatsapp =
-                                                    "+237${data[index].tel.toString().replaceAll(" ", "")}";
-                                                String whatsappURlAndroid =
-                                                    "whatsapp://send?phone=" +
-                                                        whatsapp +
-                                                        "&text= Bonjour je veux acheter la musique ${data[index].author.toTitleCase + " - " + data[index].titre.toTitleCase} ";
-                                                String whatappURLIos =
-                                                    "https://wa.me/$whatsapp?text=${Uri.parse("hello")}";
-                                                if (Platform.isIOS) {
-                                                  // for iOS phone only
-                                                  if (await canLaunch(
-                                                      whatappURLIos)) {
-                                                    await launch(whatappURLIos,
-                                                        forceSafariVC: false);
-                                                  } else {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                            const SnackBar(
-                                                                content: Text(
-                                                                    "whatsapp no installed")));
-                                                  }
-                                                } else {
-                                                  // android , web
-                                                  if (await canLaunch(
-                                                      whatsappURlAndroid)) {
-                                                    await launch(
-                                                        whatsappURlAndroid);
-                                                  } else {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                            const SnackBar(
-                                                                content: Text(
-                                                                    "whatsapp no installed")));
-                                                  }
-                                                }
-                                              },
-                                              child: const Chip(
-                                                label:
-                                                    Text("Acheter la musique"),
-                                                avatar: Icon(CupertinoIcons
-                                                    .download_circle),
-                                              ),
-                                            )
-                                      : Container(),
+                                  _loader
+                                      ? const CircularProgressIndicator(
+                                          color: kPrimaryColor)
+                                      : (data[index].download == null ||
+                                              !data[index].download!.contains(
+                                                  FirebaseAuth.instance
+                                                      .currentUser!.uid))
+                                          ? data[index].status == false
+                                              ? IconButton(
+                                                  icon: const Icon(
+                                                      Icons.download),
+                                                  onPressed: () async {
+                                                    setState(() {
+                                                      _loader = true;
+                                                    });
+                                                    try {
+                                                      FileMananger.downloadFile(
+                                                              data[index]
+                                                                  .musique!,
+                                                              data[index]
+                                                                      .titre
+                                                                      .replaceAll(
+                                                                          " ",
+                                                                          "") +
+                                                                  ".mp3")
+                                                          .then((value) {
+                                                        MusiqueServices()
+                                                            .simpleUpdateMusique(
+                                                                {
+                                                              "download":
+                                                                  FieldValue
+                                                                      .arrayUnion([
+                                                                FirebaseAuth
+                                                                    .instance
+                                                                    .currentUser!
+                                                                    .uid
+                                                              ]),
+                                                              "localUrl": value
+                                                            },
+                                                                data[index]
+                                                                    .id!);
+                                                      });
+                                                    } catch (error) {
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              "Downloaded Error",
+                                                          backgroundColor:
+                                                              Colors.red,
+                                                          fontSize: 18,
+                                                          textColor:
+                                                              Colors.white);
+                                                    } finally {
+                                                      setState(() {
+                                                        _loader = false;
+                                                      });
+                                                    }
+                                                  },
+                                                )
+                                              : InkWell(
+                                                  onTap: () async {
+                                                    String whatsapp =
+                                                        "+237${data[index].tel.toString().replaceAll(" ", "")}";
+                                                    String whatsappURlAndroid =
+                                                        "whatsapp://send?phone=" +
+                                                            whatsapp +
+                                                            "&text= Bonjour je veux acheter la musique ${data[index].author.toTitleCase + " - " + data[index].titre.toTitleCase} ";
+                                                    String whatappURLIos =
+                                                        "https://wa.me/$whatsapp?text=${Uri.parse("hello")}";
+                                                    if (Platform.isIOS) {
+                                                      // for iOS phone only
+                                                      if (await canLaunch(
+                                                          whatappURLIos)) {
+                                                        await launch(
+                                                            whatappURLIos,
+                                                            forceSafariVC:
+                                                                false);
+                                                      } else {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                                const SnackBar(
+                                                                    content: Text(
+                                                                        "whatsapp no installed")));
+                                                      }
+                                                    } else {
+                                                      // android , web
+                                                      if (await canLaunch(
+                                                          whatsappURlAndroid)) {
+                                                        await launch(
+                                                            whatsappURlAndroid);
+                                                      } else {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                                const SnackBar(
+                                                                    content: Text(
+                                                                        "whatsapp no installed")));
+                                                      }
+                                                    }
+                                                  },
+                                                  child: const Chip(
+                                                    label: Text(
+                                                        "Acheter la musique"),
+                                                    avatar: Icon(CupertinoIcons
+                                                        .download_circle),
+                                                  ),
+                                                )
+                                          : Container(),
                                 ],
                               ),
                             ),

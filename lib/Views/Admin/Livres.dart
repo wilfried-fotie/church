@@ -468,9 +468,11 @@ class _LivresUiState extends State<LivresUi> {
                                                     fontSize: 18,
                                                     textColor: Colors.white);
                                               } finally {
-                                                setState(() {
-                                                  loader = false;
-                                                });
+                                                if (mounted) {
+                                                  setState(() {
+                                                    loader = false;
+                                                  });
+                                                }
                                               }
                                             }
                                           },
@@ -582,9 +584,12 @@ class _LivreStructureState extends State<LivreStructure> {
                                                 fontSize: 18,
                                                 textColor: Colors.white);
                                           } finally {
-                                            setState(() {
-                                              _loader2 = false;
-                                            });
+                                            if (mounted) {
+                                              setState(() {
+                                                _loader2 = false;
+                                              });
+                                            }
+
                                             Navigator.of(context).pop(false);
                                           }
                                         },

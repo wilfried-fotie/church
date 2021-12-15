@@ -1,5 +1,5 @@
 import 'dart:io';
-// import 'package:audioplayers/audioplayers.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:church/helper/extention.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,7 +21,7 @@ class Musiques extends StatefulWidget {
 }
 
 class _MusiquesState extends State<Musiques> with WidgetsBindingObserver {
-  // AudioPlayer player = AudioPlayer(mode: PlayerMode.LOW_LATENCY);
+  AudioPlayer player = AudioPlayer(mode: PlayerMode.LOW_LATENCY);
 
   late ScrollController scroll = ScrollController();
   // ignore: constant_identifier_names
@@ -90,19 +90,34 @@ class _MusiquesState extends State<Musiques> with WidgetsBindingObserver {
                                                     })
                                                   : null;
 
-                                              data[index].download == null ||
-                                                      !data[index]
-                                                          .download!
-                                                          .contains(FirebaseAuth
-                                                              .instance
-                                                              .currentUser!
-                                                              .uid)
-                                                  ?
-                                                  // await player.play(
-                                                  //     data[index].musique!)
-                                                  null
-                                                  : await OpenFile.open(
-                                                      data[index].localUrl);
+                                              if (data[index].download ==
+                                                      null ||
+                                                  !data[index]
+                                                      .download!
+                                                      .contains(FirebaseAuth
+                                                          .instance
+                                                          .currentUser!
+                                                          .uid)) {
+                                                var url =
+                                                    (data[index].musique!);
+                                                int result =
+                                                    await player.play(url);
+
+                                                if (result == 1) {
+                                                  print("read");
+                                                } else {
+                                                  Fluttertoast.showToast(
+                                                      msg:
+                                                          "Une erreur est survenu veuillez télécharger !!! ",
+                                                      backgroundColor:
+                                                          Colors.red,
+                                                      fontSize: 18,
+                                                      textColor: Colors.white);
+                                                }
+                                              } else {
+                                                await OpenFile.open(
+                                                    data[index].localUrl);
+                                              }
                                             } catch (e) {
                                               setState(() {
                                                 pause = null;
@@ -120,7 +135,10 @@ class _MusiquesState extends State<Musiques> with WidgetsBindingObserver {
                                           icon: const Icon(Icons.pause),
                                           onPressed: () async {
                                             try {
-                                              // player.pause();
+                                              player.pause();
+                                              setState(() {
+                                                pause = null;
+                                              });
                                             } catch (e) {
                                               Fluttertoast.showToast(
                                                   msg:
@@ -137,7 +155,7 @@ class _MusiquesState extends State<Musiques> with WidgetsBindingObserver {
                                   IconButton(
                                       onPressed: () async {
                                         try {
-                                          // player.stop();
+                                          player.stop();
                                           setState(() {
                                             pause = null;
                                           });
@@ -159,10 +177,21 @@ class _MusiquesState extends State<Musiques> with WidgetsBindingObserver {
                                           color: kPrimaryColor,
                                         )
                                       : Container(),
-                                  data[index].download == null
+                                  (data[index].download == null ||
+                                          !data[index].download!.contains(
+                                              FirebaseAuth
+                                                  .instance.currentUser!.uid))
                                       ? data[index].status == false
                                           ? IconButton(
-                                              icon: const Icon(Icons.download),
+                                              icon: Row(
+                                                children: [
+                                                  _loader
+                                                      ? const CircularProgressIndicator(
+                                                          color: kPrimaryColor)
+                                                      : const Icon(
+                                                          Icons.download),
+                                                ],
+                                              ),
                                               onPressed: () async {
                                                 setState(() {
                                                   _loader = true;

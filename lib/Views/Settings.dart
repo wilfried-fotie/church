@@ -6,9 +6,8 @@ import 'package:church/Views/auth/Registration.dart';
 import 'package:church/tools.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+// ignore: implementation_imports
 import 'package:provider/src/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Admin/Home.dart';
 import 'Widgets/Iconiseur.dart';
@@ -27,7 +26,7 @@ class Setting extends StatelessWidget {
       children: [
         Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Text("Paramètres", style: kPrimaryText)),
+            child: const Text("Paramètres", style: kPrimaryText)),
         ListTile(
           title: const Text(
             "Changer de thème",

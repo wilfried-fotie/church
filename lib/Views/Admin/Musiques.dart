@@ -358,7 +358,6 @@ class _MusiqueUiState extends State<MusiqueUi> {
                                                 Navigator.of(context).pop();
                                                 clear();
                                               } catch (error) {
-                                                print(error);
                                                 Fluttertoast.showToast(
                                                     msg:
                                                         "Une erreur est survenu !!! svp verifier la  musique",
@@ -366,9 +365,11 @@ class _MusiqueUiState extends State<MusiqueUi> {
                                                     fontSize: 18,
                                                     textColor: Colors.white);
                                               } finally {
-                                                setState(() {
-                                                  loader = false;
-                                                });
+                                                if (mounted) {
+                                                  setState(() {
+                                                    loader = false;
+                                                  });
+                                                }
                                               }
                                             } else {
                                               Fluttertoast.showToast(

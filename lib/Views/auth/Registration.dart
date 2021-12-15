@@ -144,9 +144,11 @@ class _RegistrationState extends State<Registration> {
                                               (String verificationId) {},
                                         );
                                       } catch (error) {
-                                        setState(() {
-                                          _error = "Une erreur est survenu";
-                                        });
+                                        if (mounted) {
+                                          setState(() {
+                                            _error = "Une erreur est survenu";
+                                          });
+                                        }
                                       }
                                     }
                                   },

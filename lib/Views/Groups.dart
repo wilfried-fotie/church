@@ -617,6 +617,7 @@ class _GroupsState extends State<Groups> {
                                                             uid: _auth!.uid)
                                                         .updateRemoveGroupUser(
                                                             data["groupId"]);
+                                                    setState(() {});
                                                   },
                                                   child: Row(
                                                     crossAxisAlignment:

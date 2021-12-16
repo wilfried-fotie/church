@@ -3,10 +3,12 @@ import 'package:church/Model/AdminModel.dart';
 import 'package:church/ModelView/MyLogin.dart';
 import 'package:church/Services/AdminInfo.dart';
 import 'package:church/Views/auth/Registration.dart';
+import 'package:church/helper/testNotif.dart';
 import 'package:church/tools.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-// ignore: implementation_imports
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:provider/src/provider.dart';
 
 import '../helper/Notification.dart';
@@ -134,7 +136,7 @@ class _SettingsState extends State<Settings> {
           leading: const Iiconiseur(icon: Icon(Icons.phone)),
           onTap: () {
             Navigator.push(
-                context, MaterialPageRoute(builder: (_) => const Test()));
+                context, MaterialPageRoute(builder: (_) => const MainScreen()));
           },
         ),
 
@@ -296,5 +298,68 @@ class Test extends StatelessWidget {
             child: const Text("Test"))
       ],
     ));
+  }
+}
+
+class MainScreen extends StatefulWidget {
+  const MainScreen({Key? key}) : super(key: key);
+
+  @override
+  _MainScreenState createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    tz.initializeTimeZones();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            GestureDetector(
+              onTap: () {
+                NotificationService().cancelAllNotifications();
+              },
+              child: Container(
+                height: 40,
+                width: 200,
+                color: Colors.red,
+                child: Center(
+                  child: Text(
+                    "Cancel All Notifications",
+                  ),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () async {
+                NotificationService().showNotification(1, "Bonjour",
+                    "  la méditation du jour est déjà disponible", 1);
+                tz.initializeTimeZones();
+                await NotificationService()
+                    .showNotification(1, "Yema", "Test", 2);
+                print("Yema");
+              },
+              child: Container(
+                height: 40,
+                width: 200,
+                color: Colors.green,
+                child: Center(
+                  child: Text("Show Notification"),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

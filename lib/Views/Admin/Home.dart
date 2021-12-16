@@ -132,8 +132,10 @@ class Home extends StatelessWidget {
                           ],
                         )))),
                 InkWell(
-                    onTap: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const Pub())),
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PubsUi())),
                     child: Card(
                         color: kSecondaryColor,
                         child: Center(

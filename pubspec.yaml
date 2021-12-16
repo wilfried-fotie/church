@@ -56,7 +56,8 @@ dependencies:
   url_launcher: ^6.0.17
   syncfusion_flutter_pdfviewer: ^19.3.57-beta
   flutter_phone_direct_caller: ^2.1.0
-
+  flutter_native_timezone: ^2.0.0
+  device_info: ^2.0.3
  
   
 

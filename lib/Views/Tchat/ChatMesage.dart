@@ -130,7 +130,7 @@ class _ChatMesageState extends State<ChatMesage> {
                 const SizedBox(
                   width: 10,
                 ),
-                Text(widget.group["groupName"]),
+                Text(widget.group["groupName"] ?? ""),
               ],
             ),
             actions: _auth!.uid == widget.group['admin']

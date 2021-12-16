@@ -14,6 +14,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../Services/FileManager.dart';
 import '../../Services/UserServices.dart';
+import '../../helper/SharedPref.dart';
+import '../Widgets/MyApp.dart';
 import '../Widgets/getImage.dart';
 
 class SignIn extends StatefulWidget {
@@ -149,7 +151,12 @@ class _SignInState extends State<SignIn> {
                                               photo: null,
                                               name: _name.value.text),
                                           _auth!.uid);
-                                      Navigator.of(context).pop();
+                                      ProfilPreferences.toggleStatus();
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const MyApp()));
                                     } else {
                                       await FileMananger.uploadFile(
                                               _image!.path, "Users")
@@ -159,11 +166,15 @@ class _SignInState extends State<SignIn> {
                                                 photo: value!,
                                                 name: _name.value.text),
                                             _auth!.uid);
-
+                                        ProfilPreferences.toggleStatus();
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const MyApp()));
                                         setState(() {
                                           _loader = false;
                                         });
-                                        Navigator.of(context).pop();
                                       });
                                     }
                                   } catch (e) {

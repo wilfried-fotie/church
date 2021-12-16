@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 // ignore: implementation_imports
 import 'package:provider/src/provider.dart';
 
+import '../helper/Notification.dart';
+import '../helper/SharedPref.dart';
 import 'Admin/Home.dart';
 import 'Creator.dart';
 import 'Widgets/Iconiseur.dart';
@@ -91,7 +93,7 @@ class _SettingsState extends State<Settings> {
           height: 30,
         ),
         const Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0),
+          padding: EdgeInsets.symmetric(horizontal: 30.0),
           child: Text("Paramètres", style: kPrimaryText),
         ),
         const SizedBox(
@@ -132,36 +134,14 @@ class _SettingsState extends State<Settings> {
           leading: const Iiconiseur(icon: Icon(Icons.phone)),
           onTap: () {
             Navigator.push(
-                context, MaterialPageRoute(builder: (_) => const SignIn()));
+                context, MaterialPageRoute(builder: (_) => const Test()));
           },
         ),
 
         const SizedBox(
           height: 10,
         ),
-        // ListTile(
-        //   enableFeedback: true,
-        //   title: const Text(
-        //     "À  Propos de nous",
-        //     style: TextStyle(fontFamily: "Noto", fontWeight: FontWeight.bold),
-        //   ),
-        //   leading: const Iiconiseur(icon: Icon(Icons.art_track_rounded)),
-        //   onTap: () {
-        //     Navigator.push(context,
-        //         MaterialPageRoute(builder: (_) => const Registration()));
-        //   },
-        // ),
-        // const SizedBox(
-        //   height: 10,
-        // ),
-        // ListTile(
-        //   title: const Text(
-        //     "Aide",
-        //     style: TextStyle(fontFamily: "Noto", fontWeight: FontWeight.bold),
-        //   ),
-        //   leading: const Iiconiseur(icon: Icon(Icons.help)),
-        //   onTap: () async {},
-        // ),
+
         const SizedBox(
           height: 10,
         ),
@@ -283,6 +263,7 @@ class _SettingsState extends State<Settings> {
                       onPressed: () {
                         Navigator.of(context).pop(false);
                         FirebaseAuth.instance.signOut();
+                        // ProfilPreferences.toggleStatus();
                       },
                       child: const Text("Se Déconnecter")),
                   TextButton(
@@ -295,6 +276,24 @@ class _SettingsState extends State<Settings> {
             );
           },
         ),
+      ],
+    ));
+  }
+}
+
+class Test extends StatelessWidget {
+  const Test({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: ListView(
+      children: [
+        ElevatedButton(
+            onPressed: () => Notofication.showNotif(
+                title: "Bonjour Découvrez la méditation du jour",
+                body: "la meditaion pardemz z j h zh ks zS js,kj"),
+            child: const Text("Test"))
       ],
     ));
   }

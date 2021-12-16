@@ -6,10 +6,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
+import '../../ModelView/BottomNavigationOffstage.dart';
 import '../../Services/FileManager.dart';
 import '../../Services/GroupesServeices.dart';
 import '../../tools.dart';
+import '../Groups.dart';
 import 'SmallButton.dart';
 import 'getImage.dart';
 
@@ -58,145 +61,190 @@ class _EditGroupeState extends State<EditGroupe> {
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         Map<String, dynamic> data = snapshot.data!;
-                        _name.text = data["groupName"];
+                        _name.text = data["groupName"] ?? "";
                         return ListView(
                           children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 0, horizontal: 20),
-                              child: Form(
-                                key: nameKey,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    data["groupIcon"] != null && !_loader
-                                        ? Container(
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: kSecondaryColor,
-                                            ),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(50),
-                                              child: Semantics(
-                                                label: "image picker",
-                                                child: CachedNetworkImage(
-                                                  height: 100,
-                                                  width: 100,
-                                                  fit: BoxFit.cover,
-                                                  imageUrl: data["groupIcon"],
-                                                  placeholder: (context, url) =>
-                                                      const SizedBox(
-                                                    child: Center(
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                      color: kPrimaryColor,
-                                                    )),
-                                                  ),
-                                                  errorWidget: (context, url,
-                                                          error) =>
-                                                      const Icon(Icons.error),
+                            Stack(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 0, horizontal: 20),
+                                  child: Form(
+                                    key: nameKey,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        data["groupIcon"] != null && !_loader
+                                            ? Container(
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: kSecondaryColor,
                                                 ),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(50),
+                                                  child: Semantics(
+                                                    label: "image picker",
+                                                    child: CachedNetworkImage(
+                                                      height: 100,
+                                                      width: 100,
+                                                      fit: BoxFit.cover,
+                                                      imageUrl:
+                                                          data["groupIcon"],
+                                                      placeholder:
+                                                          (context, url) =>
+                                                              const SizedBox(
+                                                        child: Center(
+                                                            child:
+                                                                CircularProgressIndicator(
+                                                          color: kPrimaryColor,
+                                                        )),
+                                                      ),
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          const Icon(
+                                                              Icons.error),
+                                                    ),
+                                                  ),
+                                                ))
+                                            : Container(
+                                                height: 100,
+                                                width: 100,
+                                                child: FittedBox(
+                                                  child: Image.asset(
+                                                      "asset/img/logo.png"),
+                                                ),
+                                                decoration: const BoxDecoration(
+                                                    shape: BoxShape.circle),
                                               ),
-                                            ))
-                                        : Container(
-                                            height: 100,
-                                            width: 100,
-                                            child: FittedBox(
-                                              child: Image.asset(
-                                                  "asset/img/logo.png"),
-                                            ),
-                                            decoration: const BoxDecoration(
-                                                shape: BoxShape.circle),
-                                          ),
-                                    IconButton(
-                                        onPressed: () async {
-                                          final result =
-                                              await showModalBottomSheet(
-                                                  context: context,
-                                                  builder: (BuildContext bc) {
-                                                    return const GetImage(
-                                                        rad: true);
-                                                  });
-                                          if (result != null) {
-                                            setState(() {
-                                              _loader = true;
-                                            });
-                                            try {
-                                              data["groupIcon"] != null
-                                                  ? await FileMananger.delete(
-                                                      data["groupIcon"])
-                                                  : null;
-                                              await FileMananger.uploadFile(
-                                                      result!.path, "Group")
-                                                  .then((value) async {
-                                                await DatabaseService()
-                                                    .simpleUpdateUser({
-                                                  "groupIcon": value,
-                                                  "groupName": null
-                                                }, _auth!.uid);
-
+                                        IconButton(
+                                            onPressed: () async {
+                                              final result =
+                                                  await showModalBottomSheet(
+                                                      context: context,
+                                                      builder:
+                                                          (BuildContext bc) {
+                                                        return const GetImage(
+                                                            rad: true);
+                                                      });
+                                              if (result != null) {
                                                 setState(() {
-                                                  _loader = false;
+                                                  _loader = true;
                                                 });
-                                              });
-                                            } catch (e) {
-                                              Fluttertoast.showToast(
-                                                  msg:
-                                                      "Une erreur est survenu !!! ",
-                                                  backgroundColor: Colors.red,
-                                                  fontSize: 18,
-                                                  textColor: Colors.white);
-                                            }
-                                          }
-                                        },
-                                        icon: const Icon(
-                                            CupertinoIcons.camera_fill)),
-                                    const SizedBox(
-                                      height: 20,
+                                                try {
+                                                  data["groupIcon"] != null
+                                                      ? await FileMananger
+                                                          .delete(
+                                                              data["groupIcon"])
+                                                      : null;
+                                                  await FileMananger.uploadFile(
+                                                          result!.path, "Group")
+                                                      .then((value) async {
+                                                    await DatabaseService()
+                                                        .simpleUpdateUser({
+                                                      "groupIcon": value,
+                                                      "groupName":
+                                                          data["groupName"]
+                                                    }, data["groupId"]).then(
+                                                            (value) {
+                                                      setState(() {
+                                                        _loader = true;
+                                                      });
+                                                      context
+                                                          .read<
+                                                              BottomNavigationOffstage>()
+                                                          .toggleStatus();
+                                                      Navigator.pushAndRemoveUntil(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  const Groups()),
+                                                          (route) => false);
+                                                      FocusScope.of(context)
+                                                          .unfocus();
+                                                    });
+                                                  });
+                                                } catch (e) {
+                                                  Fluttertoast.showToast(
+                                                      msg:
+                                                          "Une erreur est survenu !!! ",
+                                                      backgroundColor:
+                                                          Colors.red,
+                                                      fontSize: 18,
+                                                      textColor: Colors.white);
+                                                }
+                                              }
+                                            },
+                                            icon: const Icon(
+                                                CupertinoIcons.camera_fill)),
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        TextFormField(
+                                            controller: _name,
+                                            validator: _namValidator,
+                                            decoration: inputStyle.copyWith(
+                                                hintText: "Nom",
+                                                prefixIcon:
+                                                    const Icon(Icons.person))),
+                                        const SizedBox(
+                                          height: 40,
+                                        ),
+                                        Container(
+                                          alignment: Alignment.center,
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal: 100),
+                                          child: SmallButton(
+                                              title: "Enregistrer ",
+                                              onClick: () async {
+                                                FocusScope.of(context).unfocus;
+                                                if (nameKey.currentState!
+                                                    .validate()) {
+                                                  await DatabaseService()
+                                                      .simpleUpdateUser({
+                                                    "groupName":
+                                                        _name.value.text,
+                                                    "groupIcon":
+                                                        data["groupIcon"],
+                                                  }, data["groupId"]).then(
+                                                          (value) {
+                                                    context
+                                                        .read<
+                                                            BottomNavigationOffstage>()
+                                                        .toggleStatus();
+                                                    Navigator.pushAndRemoveUntil(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                const Groups()),
+                                                        (route) => false);
+                                                    FocusScope.of(context)
+                                                        .unfocus();
+                                                  });
+                                                }
+                                              }),
+                                        ),
+                                        const SizedBox(
+                                          height: 30,
+                                        ),
+                                      ],
                                     ),
-                                    TextFormField(
-                                        controller: _name,
-                                        validator: _namValidator,
-                                        decoration: inputStyle.copyWith(
-                                            hintText: "Nom",
-                                            prefixIcon:
-                                                const Icon(Icons.person))),
-                                    const SizedBox(
-                                      height: 40,
-                                    ),
-                                    Container(
-                                      alignment: Alignment.center,
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 100),
-                                      child: SmallButton(
-                                          title: "Enregistrer ",
-                                          onClick: () async {
-                                            FocusScope.of(context).unfocus;
-                                            if (nameKey.currentState!
-                                                .validate()) {
-                                              await DatabaseService()
-                                                  .simpleUpdateUser({
-                                                "groupName": _name.value.text,
-                                                "groupIcon": null
-                                              }, _auth!.uid);
-                                              FocusScope.of(context).unfocus();
-                                              Navigator.of(context).pop();
-                                            }
-                                          }),
-                                    ),
-                                    const SizedBox(
-                                      height: 30,
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),
+                                _loader
+                                    ? const Center(
+                                        child: CircularProgressIndicator(
+                                        color: kPrimaryColor,
+                                      ))
+                                    : Container()
+                              ],
                             ),
                           ],
                         );

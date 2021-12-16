@@ -10,12 +10,13 @@ import 'ModelView/MyLogin.dart';
 import 'Routes/routes.dart';
 import 'Themes.dart';
 import 'Views/auth/Choice.dart';
+import 'helper/SharedPref.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final AdaptiveThemeMode? savedThemeMode = await AdaptiveTheme.getThemeMode();
   await Firebase.initializeApp();
-
+  await ProfilPreferences.init();
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: kPrimaryColor, systemNavigationBarColor: Colors.black));
   FirebaseAuth _auth = FirebaseAuth.instance;

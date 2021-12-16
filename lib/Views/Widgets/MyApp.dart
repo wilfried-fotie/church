@@ -111,6 +111,7 @@ class _MyAppState extends State<MyApp> {
                         const Icon(
                           CupertinoIcons.group,
                           size: 30,
+                          color: kTextColor,
                         ),
                         1),
                     buildBottomNavigationBarItem(

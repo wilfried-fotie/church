@@ -385,7 +385,7 @@ class _GroupsState extends State<Groups> {
                               return Column(
                                 children: [
                                   ListTile(
-                                    title: Text(data["groupName"]),
+                                    title: Text(data["groupName"] ?? ""),
                                     onTap: () async {
                                       DatabaseService(
                                               uid: FirebaseAuth
@@ -574,7 +574,7 @@ class _GroupsState extends State<Groups> {
                               return Column(
                                 children: [
                                   ListTile(
-                                    title: Text(data["groupName"]),
+                                    title: Text(data["groupName"] ?? ""),
                                     subtitle: Container(
                                       alignment: Alignment.centerLeft,
                                       child: Row(

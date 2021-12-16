@@ -241,18 +241,14 @@ class _RegistrationState extends State<Registration> {
                                                     setState(() {
                                                       _loader = _loader;
                                                     });
-
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (_) =>
-                                                                const SignIn()));
                                                   } catch (error) {
-                                                    setState(() {
-                                                      _error =
-                                                          "Le code saisie est invalide";
-                                                      _loader = false;
-                                                    });
+                                                    if (mounted) {
+                                                      setState(() {
+                                                        _error =
+                                                            "Le code saisie est invalide";
+                                                        _loader = false;
+                                                      });
+                                                    }
                                                   }
                                                 }
                                               },
@@ -262,16 +258,31 @@ class _RegistrationState extends State<Registration> {
                                         const SizedBox(
                                           height: 20,
                                         ),
-                                        TextButton(
-                                            child: const Text(
-                                                "Essayez de nouveau"),
-                                            onPressed: () {
-                                              setState(() {
-                                                otp = true;
-                                                _error = "";
-                                                _otp.text = "";
-                                              });
-                                            })
+                                        StreamBuilder<int>(
+                                            stream: _stream,
+                                            builder: (context, snapshot) {
+                                              if (!_loader &&
+                                                  snapshot.hasData &&
+                                                  snapshot.data! < 60) {
+                                                return Text(
+                                                  "Si vous ne recevez pas le code au bout de 60 s reessayer " +
+                                                      snapshot.data.toString() +
+                                                      " seconds",
+                                                  textAlign: TextAlign.center,
+                                                );
+                                              } else {
+                                                return TextButton(
+                                                    child: const Text(
+                                                        "Essayez de nouveau"),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        otp = true;
+                                                        _error = "";
+                                                        _otp.text = "";
+                                                      });
+                                                    });
+                                              }
+                                            }),
                                       ],
                                     ),
                                   )),
@@ -288,4 +299,7 @@ class _RegistrationState extends State<Registration> {
       ),
     );
   }
+
+  final Stream<int> _stream =
+      Stream.periodic(const Duration(milliseconds: 1000), (value) => value);
 }

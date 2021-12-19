@@ -117,6 +117,7 @@ class _LivresUiState extends State<LivresUi> {
     return showModalBottomSheet(
         backgroundColor: Colors.transparent,
         context: context,
+        enableDrag: false,
         isScrollControlled: true,
         builder: (context) =>
             StatefulBuilder(builder: (context, StateSetter setState) {
@@ -125,7 +126,7 @@ class _LivresUiState extends State<LivresUi> {
                     loader ? Alignment.bottomCenter : Alignment.bottomCenter,
                 children: [
                   FractionallySizedBox(
-                    heightFactor: 0.9,
+                    heightFactor: .9,
                     child: Container(
                       decoration: const BoxDecoration(
                           color: Colors.white,
@@ -556,7 +557,7 @@ class _LivreStructureState extends State<LivreStructure> {
                                         color: kPrimaryColor),
                                   )
                                 : const Text(
-                                    "Voules vous vraiment tout supprimer ?"),
+                                    "Voules vous vraiment  supprimer ?"),
                             actions: _loader2
                                 ? []
                                 : [

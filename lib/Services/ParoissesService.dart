@@ -54,12 +54,19 @@ class ParoissesService {
         .map((snap) => snap.docs.map((e) => e.data()).toList());
   }
 
+  Future<void> delete(String doc) async {
+    await medRef
+        .doc(doc)
+        .delete()
+        .then((value) => print("User dete"))
+        .catchError((error) => print("Failed to delete user: $error"));
+  }
+
   Future<void> updateParoisses(Paroisses value, String doc) async {
     await medRef
         .doc(doc)
         .update(value.toJson())
         .then((value) => print("User Updated"))
         .catchError((error) => print("Failed to update user: $error"));
-    ;
   }
 }

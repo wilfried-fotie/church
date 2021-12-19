@@ -1,6 +1,5 @@
 import 'package:church/ModelView/BottomNavigationOffstage.dart';
 import 'package:church/Views/Home/DetailEnseignement.dart';
-import 'package:church/Views/Home/LivreDetail.dart';
 import 'package:church/Views/Home/MeditationDetail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

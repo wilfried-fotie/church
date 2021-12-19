@@ -110,6 +110,7 @@ class _EnseignementUiState extends State<EnseignementUi> {
     return showModalBottomSheet(
         backgroundColor: Colors.transparent,
         context: context,
+        enableDrag: false,
         isScrollControlled: true,
         builder: (context) =>
             StatefulBuilder(builder: (context, StateSetter setState) {
@@ -337,8 +338,8 @@ class _EnseignementStructureState extends State<EnseignementStructure> {
                 showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                          title: const Text(
-                              "Voules vous vraiment tout supprimer ?"),
+                          title:
+                              const Text("Voules vous vraiment  supprimer ?"),
                           actions: [
                             TextButton(
                                 onPressed: () async {
@@ -382,6 +383,7 @@ class _EnseignementStructureState extends State<EnseignementStructure> {
         backgroundColor: Colors.transparent,
         context: context,
         isScrollControlled: true,
+        enableDrag: false,
         builder: (context) =>
             StatefulBuilder(builder: (context, StateSetter setState) {
               return FractionallySizedBox(

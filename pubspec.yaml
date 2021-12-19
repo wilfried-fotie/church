@@ -58,6 +58,8 @@ dependencies:
   flutter_phone_direct_caller: ^2.1.0
   flutter_native_timezone: ^2.0.0
   device_info: ^2.0.3
+  google_mobile_ads: ^1.0.1
+  carousel_slider: ^4.0.0
  
   
 

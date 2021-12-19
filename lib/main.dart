@@ -12,16 +12,24 @@ import 'Themes.dart';
 import 'Views/auth/Choice.dart';
 import 'helper/SharedPref.dart';
 import 'helper/testNotif.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final AdaptiveThemeMode? savedThemeMode = await AdaptiveTheme.getThemeMode();
   await Firebase.initializeApp();
   await ProfilPreferences.init();
+  MobileAds.instance.initialize();
+
   NotificationService().initNotification();
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: kPrimaryColor, systemNavigationBarColor: Colors.black));
   FirebaseAuth _auth = FirebaseAuth.instance;
+  tz.initializeTimeZones();
+  NotificationService().showNotification(
+      0, "Bonjour", "La méditation du jour est déja disponible", 2);
   runApp(AdaptiveTheme(
       light: lightTheme,
       dark: darkTheme,

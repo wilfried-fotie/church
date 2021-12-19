@@ -111,6 +111,7 @@ class _MusiqueUiState extends State<MusiqueUi> {
     return showModalBottomSheet(
         backgroundColor: Colors.transparent,
         context: context,
+        enableDrag: false,
         isScrollControlled: true,
         builder: (context) =>
             StatefulBuilder(builder: (context, StateSetter setState) {
@@ -226,7 +227,7 @@ class _MusiqueUiState extends State<MusiqueUi> {
                                           return "Ce champ doit faire au moins 3 caractères";
                                       },
                                       decoration: inputStyle.copyWith(
-                                          labelText: "Titre du musique"),
+                                          labelText: "Titre de la Musique"),
                                     ),
                                   ),
                                   const SizedBox(height: 20),
@@ -460,7 +461,7 @@ class _MusiquetructureState extends State<Musiquetructure> {
                                         color: kPrimaryColor),
                                   )
                                 : const Text(
-                                    "Voules vous vraiment tout supprimer ?"),
+                                    "Voules vous vraiment  supprimer ?"),
                             actions: _loader2
                                 ? []
                                 : [
@@ -652,7 +653,7 @@ class _ModMusiquetate extends State<Modmusique> {
                               return "Ce champ doit faire au moins 3 caractères";
                           },
                           decoration: inputStyle.copyWith(
-                              labelText: "Titre du musique"),
+                              labelText: "Titre de la Musique"),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -666,7 +667,7 @@ class _ModMusiquetate extends State<Modmusique> {
                               return "Ce champ est réquis";
                           },
                           decoration: inputStyle.copyWith(
-                              labelText: "Auteur du musique"),
+                              labelText: "Auteur de la Musique"),
                         ),
                       ),
                       const SizedBox(

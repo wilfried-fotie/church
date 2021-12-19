@@ -20,11 +20,9 @@ class PubsUi extends StatefulWidget {
 
 class _PubsUiState extends State<PubsUi> {
   final GlobalKey<FormState> key = GlobalKey<FormState>();
-  late final TextEditingController paroisse = TextEditingController();
-  late final TextEditingController berger = TextEditingController();
-  late final TextEditingController endDate = TextEditingController();
-  late final TextEditingController prix = TextEditingController();
-  late final TextEditingController departement = TextEditingController();
+  late final TextEditingController url = TextEditingController();
+  late final TextEditingController name = TextEditingController();
+
   String? fileName;
   File? _fileData;
   bool loader = false, _switch = true;
@@ -53,20 +51,14 @@ class _PubsUiState extends State<PubsUi> {
   @override
   void dispose() {
     super.dispose();
-    paroisse.dispose();
-    endDate.dispose();
-    scroll.dispose();
-    prix.dispose();
-    departement.dispose();
-    berger.dispose();
+    url.dispose();
+    name.dispose();
   }
 
   void clear() {
-    paroisse.clear();
-    endDate.clear();
-    prix.clear();
-    departement.clear();
-    berger.clear();
+    url.clear();
+    name.clear();
+
     loader = false;
     fileName = null;
 
@@ -117,6 +109,7 @@ class _PubsUiState extends State<PubsUi> {
     return showModalBottomSheet(
         backgroundColor: Colors.transparent,
         context: context,
+        enableDrag: false,
         isScrollControlled: true,
         builder: (context) =>
             StatefulBuilder(builder: (context, StateSetter setState) {
@@ -162,7 +155,7 @@ class _PubsUiState extends State<PubsUi> {
                                     ),
                                   ),
                                   const Text(
-                                    "Ajouter Un Pub",
+                                    "Ajouter Une Pub ou un Évènnement",
                                     style: kBoldText,
                                   ),
                                   const SizedBox(height: 20),
@@ -188,7 +181,7 @@ class _PubsUiState extends State<PubsUi> {
                                               padding:
                                                   EdgeInsets.only(left: 25.0),
                                               child: Text(
-                                                "Importer l'image du Pub",
+                                                "Importer l'image de la Pub",
                                                 style: TextStyle(fontSize: 18),
                                               ),
                                             ),
@@ -225,182 +218,33 @@ class _PubsUiState extends State<PubsUi> {
                                     child: TextFormField(
                                       autovalidateMode:
                                           AutovalidateMode.onUserInteraction,
-                                      controller: paroisse,
+                                      controller: name,
                                       validator: (value) {
-                                        if (value!.trim().isEmpty)
-                                          return "Ce champ est réquis";
-                                        if (value.length < 3)
-                                          return "Ce champ doit faire au moins 3 caractères";
+                                        if (value!.trim().length < 3)
+                                          return "Le nom doit faire au moins trois caratères";
                                       },
                                       decoration: inputStyle.copyWith(
-                                          labelText: "url du Pub"),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 20),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 20.0, right: 20),
-                                    child: TextFormField(
-                                      autovalidateMode:
-                                          AutovalidateMode.onUserInteraction,
-                                      keyboardType: TextInputType.multiline,
-                                      minLines: 5,
-                                      maxLines: 8,
-                                      controller: berger,
-                                      validator: (value) {
-                                        if (value!.trim().isEmpty)
-                                          return "Ce champ est réquis";
-                                        if (value.length < 3)
-                                          return "Ce champ doit faire au moins 3 Caractères";
-                                      },
-                                      decoration: inputStyle.copyWith(
-                                          labelText: "Description du Pub"),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 20),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 20.0, right: 20),
-                                    child: TextFormField(
-                                      autovalidateMode:
-                                          AutovalidateMode.onUserInteraction,
-                                      controller: departement,
-                                      validator: (value) {
-                                        if (value!.trim().isEmpty)
-                                          return "Ce champ est réquis";
-                                      },
-                                      decoration: inputStyle.copyWith(
-                                          labelText: "Auteur"),
+                                          labelText: "Nom de la pub"),
                                     ),
                                   ),
                                   const SizedBox(
                                     height: 20,
                                   ),
-                                  Row(
-                                    children: [
-                                      const SizedBox(
-                                        width: 30,
-                                      ),
-                                      const Text("Ce Pub est payant?"),
-                                      const SizedBox(
-                                        width: 30,
-                                      ),
-                                      Switch(
-                                          value: _switch,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _switch = value;
-                                            });
-                                          }),
-                                    ],
-                                  ),
-                                  _switch
-                                      ? const SizedBox(
-                                          height: 20,
-                                        )
-                                      : Container(),
-                                  _switch
-                                      ? Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 20.0, right: 20),
-                                          child: TextFormField(
-                                            autovalidateMode: AutovalidateMode
-                                                .onUserInteraction,
-                                            controller: prix,
-                                            keyboardType: TextInputType.number,
-                                            validator: _switch
-                                                ? (value) {
-                                                    if (value!.trim().isEmpty)
-                                                      return "Ce champ est réquis";
-                                                  }
-                                                : null,
-                                            decoration: inputStyle.copyWith(
-                                                labelText: "Prix"),
-                                          ),
-                                        )
-                                      : Container(),
-                                  _switch
-                                      ? Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 25, left: 20.0, right: 20),
-                                          child: TextFormField(
-                                            autovalidateMode: AutovalidateMode
-                                                .onUserInteraction,
-                                            controller: endDate,
-                                            keyboardType: TextInputType.number,
-                                            validator: _switch
-                                                ? (value) {
-                                                    if (value!.length != 9)
-                                                      return "Ce champ doit faire 9 chiffres ";
-                                                  }
-                                                : null,
-                                            decoration: inputStyle.copyWith(
-                                                labelText:
-                                                    "Numéro de téléphone du vendeur"),
-                                          ),
-                                        )
-                                      : Container(),
-                                  !_switch
-                                      ? Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 20.0, right: 5),
-                                          child: Row(
-                                            children: [
-                                              const Align(
-                                                alignment: Alignment.topLeft,
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 25.0),
-                                                  child: Text(
-                                                    "Importer le pdf du Pub",
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 20),
-                                              IconButton(
-                                                  onPressed: () async {
-                                                    try {
-                                                      FilePickerResult? result =
-                                                          await FilePicker
-                                                              .platform
-                                                              .pickFiles(
-                                                        type: FileType.custom,
-                                                        allowedExtensions: [
-                                                          'pdf',
-                                                        ],
-                                                      );
-
-                                                      if (result != null) {
-                                                        File file = File(result
-                                                            .files
-                                                            .single
-                                                            .path!);
-                                                        setState(() {
-                                                          fileName = result
-                                                              .files.first.name;
-                                                          _fileData = file;
-                                                        });
-                                                      } else
-                                                        return;
-                                                    } catch (err) {
-                                                      print(err);
-                                                      print("err");
-                                                    }
-                                                  },
-                                                  icon: const Icon(
-                                                      Icons.picture_as_pdf)),
-                                            ],
-                                          ))
-                                      : Container(),
                                   const SizedBox(height: 20),
-                                  fileName != null && !_switch
-                                      ? Text(fileName!)
-                                      : Container(),
-                                  fileName != null && !_switch
-                                      ? const SizedBox(height: 20)
-                                      : Container(),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 20.0, right: 20),
+                                    child: TextFormField(
+                                      autovalidateMode:
+                                          AutovalidateMode.onUserInteraction,
+                                      controller: url,
+                                      decoration: inputStyle.copyWith(
+                                          labelText: "URL de la Pub"),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
@@ -413,42 +257,64 @@ class _PubsUiState extends State<PubsUi> {
                                           ),
                                           onPressed: () async {
                                             if (key.currentState!.validate() &&
-                                                    !_switch
-                                                ? _fileData != null
-                                                : true) {
+                                                _image != null) {
                                               setState(() {
                                                 loader = true;
                                               });
                                               try {
                                                 String? urlImage =
-                                                    _image != null
-                                                        ? await FileMananger
-                                                            .uploadFile(
-                                                                _image!.path,
-                                                                "Pubs")
-                                                        : null;
-                                                String? urlPdf =
-                                                    fileName != null
-                                                        ? await FileMananger
-                                                            .uploadFile(
-                                                                _fileData!.path,
-                                                                "Pubs")
-                                                        : null;
+                                                    await FileMananger
+                                                        .uploadFile(
+                                                            _image!.path,
+                                                            "Pubs");
 
                                                 await _medData.addPub(PubModel(
-                                                  url: paroisse.value.text,
+                                                  url: url.value.text,
+                                                  name: name.value.text,
                                                   image: urlImage!,
-                                                  startDate: berger.value.text,
-                                                  endDate: endDate.value.text,
                                                 ));
 
                                                 Navigator.of(context).pop();
                                                 clear();
                                               } catch (error) {
-                                                print(error);
                                                 Fluttertoast.showToast(
                                                     msg:
-                                                        "Une erreur est survenu !!! svp verifier l'image du Pub",
+                                                        "Une erreur est survenu !!! svp verifier l'image de la Pub",
+                                                    backgroundColor: Colors.red,
+                                                    fontSize: 18,
+                                                    textColor: Colors.white);
+                                              } finally {
+                                                if (mounted) {
+                                                  setState(() {
+                                                    loader = false;
+                                                  });
+                                                }
+                                              }
+                                            } else if (!key.currentState!
+                                                    .validate() &&
+                                                _image != null) {
+                                              setState(() {
+                                                loader = true;
+                                              });
+                                              try {
+                                                String? urlImage =
+                                                    await FileMananger
+                                                        .uploadFile(
+                                                            _image!.path,
+                                                            "Pubs");
+
+                                                await _medData.addPub(PubModel(
+                                                  url: null,
+                                                  name: name.value.text,
+                                                  image: urlImage!,
+                                                ));
+
+                                                Navigator.of(context).pop();
+                                                clear();
+                                              } catch (error) {
+                                                Fluttertoast.showToast(
+                                                    msg:
+                                                        "Une erreur est survenu !!! svp verifier l'image de la Pub",
                                                     backgroundColor: Colors.red,
                                                     fontSize: 18,
                                                     textColor: Colors.white);
@@ -462,7 +328,7 @@ class _PubsUiState extends State<PubsUi> {
                                             }
                                           },
                                           child: const Text(
-                                            "Ajouter Le Pub",
+                                            "Ajouter La Pub",
                                             style:
                                                 TextStyle(color: kPrimaryColor),
                                           )),
@@ -539,7 +405,7 @@ class _PubstructureState extends State<Pubstructure> {
                                         color: kPrimaryColor),
                                   )
                                 : const Text(
-                                    "Voules vous vraiment tout supprimer ?"),
+                                    "Voules vous vraiment  supprimer ?"),
                             actions: _loader2
                                 ? []
                                 : [
@@ -549,10 +415,8 @@ class _PubstructureState extends State<Pubstructure> {
                                             _loader2 = true;
                                           });
                                           try {
-                                            if (widget.data.image != null) {
-                                              await FileMananger.delete(
-                                                  widget.data.image!);
-                                            }
+                                            await FileMananger.delete(
+                                                widget.data.image);
 
                                             await _medData
                                                 .delete(widget.data.id!);
@@ -583,11 +447,7 @@ class _PubstructureState extends State<Pubstructure> {
                         }));
               },
               icon: const Icon(Icons.delete)),
-          title: Text(widget.data.url!),
-          subtitle: Padding(
-            padding: const EdgeInsets.only(top: 10.0, bottom: 0),
-            child: Text(widget.data.startDate),
-          ),
+          title: Text(widget.data.name),
           contentPadding: const EdgeInsets.all(8),
         ),
       ),
@@ -606,19 +466,11 @@ class ModPub extends StatefulWidget {
 class _ModPubstate extends State<ModPub> {
   final GlobalKey<FormState> key = GlobalKey<FormState>();
 
-  late final TextEditingController paroisse =
+  late final TextEditingController url =
       TextEditingController(text: widget.data.url);
 
-  late final TextEditingController berger =
-      TextEditingController(text: widget.data.startDate);
-  late final TextEditingController endDate =
-      TextEditingController(text: widget.data.endDate);
-
-  late final TextEditingController distric =
-      TextEditingController(text: widget.data.url.toString());
-
-  late final TextEditingController departement =
-      TextEditingController(text: widget.data.startDate);
+  late final TextEditingController name =
+      TextEditingController(text: widget.data.name);
 
   bool load = false;
   late PubModel data = widget.data;
@@ -626,15 +478,13 @@ class _ModPubstate extends State<ModPub> {
   bool _loader2 = false;
   String? fileName, fileNamePdf;
   PubService _medData = PubService();
-  File? _image, _pdf;
+  File? _image;
 
   @override
   void dispose() {
     super.dispose();
-    paroisse.dispose();
-    distric.dispose();
-    berger.dispose();
-    departement.dispose();
+    url.dispose();
+    name.dispose();
   }
 
   void clear() {
@@ -679,19 +529,16 @@ class _ModPubstate extends State<ModPub> {
                                           fit: BoxFit.cover,
                                         ),
                                       )
-                                    : widget.data.image != null
-                                        ? CachedNetworkImage(
-                                            height: 80,
-                                            fit: BoxFit.cover,
-                                            imageUrl: widget.data.image!,
-                                            placeholder: (context, url) =>
-                                                const CircularProgressIndicator(
-                                                    color: kPrimaryColor),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    const Icon(Icons.error),
-                                          )
-                                        : Container(),
+                                    : CachedNetworkImage(
+                                        height: 80,
+                                        fit: BoxFit.cover,
+                                        imageUrl: widget.data.image,
+                                        placeholder: (context, url) =>
+                                            const CircularProgressIndicator(
+                                                color: kPrimaryColor),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error),
+                                      ),
                                 Padding(
                                     padding: const EdgeInsets.only(
                                         top: 5.0, right: 5),
@@ -740,16 +587,17 @@ class _ModPubstate extends State<ModPub> {
                                   child: TextFormField(
                                     autovalidateMode:
                                         AutovalidateMode.onUserInteraction,
-                                    controller: paroisse,
+                                    controller: name,
                                     validator: (value) {
-                                      if (value!.trim().isEmpty)
-                                        return "Ce champ est réquis";
-                                      if (value.length < 3)
-                                        return "Ce champ doit faire au moins 3 caractères";
+                                      if (value!.trim().length < 3)
+                                        return "Le nom doit faire au moins trois caratères";
                                     },
                                     decoration: inputStyle.copyWith(
-                                        labelText: "url du Pub"),
+                                        labelText: "Nom de la pub"),
                                   ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
                                 ),
                                 const SizedBox(height: 20),
                                 Padding(
@@ -758,36 +606,9 @@ class _ModPubstate extends State<ModPub> {
                                   child: TextFormField(
                                     autovalidateMode:
                                         AutovalidateMode.onUserInteraction,
-                                    keyboardType: TextInputType.multiline,
-                                    minLines: 5,
-                                    maxLines: 8,
-                                    controller: berger,
-                                    validator: (value) {
-                                      if (value!.trim().isEmpty)
-                                        return "Ce champ est réquis";
-                                      if (value.length < 3)
-                                        return "Ce champ doit faire au moins 3 Caractères";
-                                    },
+                                    controller: url,
                                     decoration: inputStyle.copyWith(
-                                        labelText: "Description du Pub"),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 20.0, right: 20),
-                                  child: TextFormField(
-                                    autovalidateMode:
-                                        AutovalidateMode.onUserInteraction,
-                                    controller: departement,
-                                    validator: (value) {
-                                      if (value!.trim().isEmpty)
-                                        return "Ce champ est réquis";
-                                    },
-                                    decoration: inputStyle.copyWith(
-                                        labelText: "Auteur du Pub"),
+                                        labelText: "url du Pub"),
                                   ),
                                 ),
                                 const SizedBox(
@@ -797,32 +618,6 @@ class _ModPubstate extends State<ModPub> {
                                   children: [
                                     const SizedBox(
                                       width: 30,
-                                    ),
-                                    const Text("Ce Pub est payant?"),
-                                    const SizedBox(
-                                      width: 30,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 25,
-                                          top: 20,
-                                          left: 20.0,
-                                          right: 20),
-                                      child: TextFormField(
-                                        autovalidateMode:
-                                            AutovalidateMode.onUserInteraction,
-                                        controller: endDate,
-                                        keyboardType: TextInputType.number,
-                                        validator: (value) {
-                                          if (value!.length != 9)
-                                            return "Ce champ doit faire 9 chiffres ";
-                                          if (int.parse(value) == 0)
-                                            return "Ce champ est réquis";
-                                        },
-                                        decoration: inputStyle.copyWith(
-                                            labelText:
-                                                "Numéro de téléphone du vendeur"),
-                                      ),
                                     ),
                                     Row(
                                       mainAxisAlignment:
@@ -836,13 +631,16 @@ class _ModPubstate extends State<ModPub> {
                                             ),
                                             onPressed: () async {
                                               if (key.currentState!
-                                                  .validate()) {
+                                                      .validate() &&
+                                                  (url.value.text != ""
+                                                      ? Uri.parse(
+                                                              url.value.text)
+                                                          .isAbsolute
+                                                      : true)) {
                                                 setState(() {
                                                   load = true;
                                                 });
                                                 try {
-                                                  print(_image);
-
                                                   String? urlImage =
                                                       _image != null
                                                           ? await FileMananger
@@ -851,9 +649,7 @@ class _ModPubstate extends State<ModPub> {
                                                                   "Pubs")
                                                           : widget.data.image;
 
-                                                  (_image != null &&
-                                                          widget.data.image !=
-                                                              null)
+                                                  (_image != null)
                                                       ? await FileMananger
                                                           .delete(
                                                               widget.data.image)
@@ -861,20 +657,15 @@ class _ModPubstate extends State<ModPub> {
 
                                                   await _medData.updatePub(
                                                       PubModel(
-                                                        url:
-                                                            paroisse.value.text,
+                                                        url: url.value.text,
+                                                        name: name.value.text,
                                                         date: widget.data.date,
                                                         image: urlImage!,
-                                                        startDate:
-                                                            berger.value.text,
-                                                        endDate:
-                                                            endDate.value.text,
                                                       ),
                                                       widget.data.id!);
 
                                                   Navigator.of(context).pop();
                                                 } catch (error) {
-                                                  print(error);
                                                   Fluttertoast.showToast(
                                                       msg:
                                                           "Une erreur est survenu",
@@ -883,6 +674,52 @@ class _ModPubstate extends State<ModPub> {
                                                       fontSize: 18,
                                                       textColor: Colors.white);
                                                 }
+                                              } else if (_image != null &&
+                                                  !key.currentState!
+                                                      .validate()) {
+                                                setState(() {
+                                                  load = true;
+                                                });
+                                                try {
+                                                  String? urlImage =
+                                                      _image != null
+                                                          ? await FileMananger
+                                                              .uploadFile(
+                                                                  _image!.path,
+                                                                  "Pubs")
+                                                          : widget.data.image;
+
+                                                  (_image != null)
+                                                      ? await FileMananger
+                                                          .delete(
+                                                              widget.data.image)
+                                                      : null;
+
+                                                  await _medData.updatePub(
+                                                      PubModel(
+                                                        url: widget.data.url,
+                                                        date: widget.data.date,
+                                                        name: widget.data.name,
+                                                        image: urlImage!,
+                                                      ),
+                                                      widget.data.id!);
+
+                                                  Navigator.of(context).pop();
+                                                } catch (error) {
+                                                  Fluttertoast.showToast(
+                                                      msg:
+                                                          "Une erreur est survenu",
+                                                      backgroundColor:
+                                                          Colors.red,
+                                                      fontSize: 18,
+                                                      textColor: Colors.white);
+                                                }
+                                              } else {
+                                                Fluttertoast.showToast(
+                                                    msg: "Url invalide",
+                                                    backgroundColor: Colors.red,
+                                                    fontSize: 18,
+                                                    textColor: Colors.white);
                                               }
                                             },
                                             child: const Text(
@@ -909,7 +746,17 @@ class _ModPubstate extends State<ModPub> {
                                 ),
                               ],
                             ),
-                          ))))
+                          )))),
+              load
+                  ? Container(
+                      color: kTextColor.withOpacity(.4),
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                          color: kPrimaryColor,
+                        ),
+                      ),
+                    )
+                  : Container(),
             ]));
   }
 }

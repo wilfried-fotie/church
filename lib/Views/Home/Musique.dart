@@ -25,7 +25,7 @@ class _MusiquesState extends State<Musiques> with WidgetsBindingObserver {
   static const int PEERPAGE = 20;
   int nbre = 20;
   int? pause;
-  bool _loader = false;
+  bool _loader = false, _loader8 = false;
 
   @override
   void initState() {
@@ -70,121 +70,26 @@ class _MusiquesState extends State<Musiques> with WidgetsBindingObserver {
                               padding: const EdgeInsets.only(top: 8.0),
                               child: Row(
                                 children: [
-                                  !(data[index].download == null ||
-                                          !data[index].download!.contains(
-                                              FirebaseAuth
-                                                  .instance.currentUser!.uid))
-                                      ? data[index].status == false
-                                          ? pause != index &&
-                                                  (data[index].download ==
-                                                          null ||
-                                                      data[index]
-                                                          .download!
-                                                          .contains(FirebaseAuth
-                                                              .instance
-                                                              .currentUser!
-                                                              .uid))
-                                              ? IconButton(
-                                                  icon: const Icon(
-                                                      Icons.play_arrow),
-                                                  onPressed: () async {
-                                                    try {
-                                                      data[index].download ==
-                                                                  null ||
-                                                              !data[index]
-                                                                  .download!
-                                                                  .contains(FirebaseAuth
-                                                                      .instance
-                                                                      .currentUser!
-                                                                      .uid)
-                                                          ? setState(() {
-                                                              pause = index;
-                                                            })
-                                                          : null;
-
-                                                      if (data[index]
-                                                                  .download ==
-                                                              null ||
-                                                          !data[index]
-                                                              .download!
-                                                              .contains(
-                                                                  FirebaseAuth
-                                                                      .instance
-                                                                      .currentUser!
-                                                                      .uid)) {
-                                                        var url = (data[index]
-                                                            .musique!);
-                                                      } else {
-                                                        await OpenFile.open(
-                                                            data[index]
-                                                                .localUrl);
-                                                      }
-                                                    } catch (e) {
-                                                      if (mounted) {
-                                                        setState(() {
-                                                          pause = null;
-                                                        });
-                                                      }
-
-                                                      Fluttertoast.showToast(
-                                                          msg:
-                                                              "Une erreur est survenu veuillez télécharger !!! ",
-                                                          backgroundColor:
-                                                              Colors.red,
-                                                          fontSize: 18,
-                                                          textColor:
-                                                              Colors.white);
-                                                    }
-                                                  },
-                                                )
-                                              : IconButton(
-                                                  icon: const Icon(Icons.pause),
-                                                  onPressed: () async {
+                                  !data[index].status
+                                      ? _loader
+                                          ? const CircularProgressIndicator(
+                                              color: kPrimaryColor)
+                                          : IconButton(
+                                              icon:
+                                                  const Icon(Icons.play_arrow),
+                                              onPressed: () async {
+                                                try {
+                                                  if (!await FileMananger
+                                                      .contain(
+                                                          data[index]
+                                                              .titre
+                                                              .replaceAll(
+                                                                  " ", ""),
+                                                          "mp3")) {
                                                     try {
                                                       setState(() {
-                                                        pause = null;
+                                                        _loader = true;
                                                       });
-                                                    } catch (e) {
-                                                      Fluttertoast.showToast(
-                                                          msg:
-                                                              "Une erreur est survenu !!! ",
-                                                          backgroundColor:
-                                                              Colors.red,
-                                                          fontSize: 18,
-                                                          textColor:
-                                                              Colors.white);
-                                                    }
-                                                  },
-                                                )
-                                          : Container()
-                                      : Container(),
-                                  const SizedBox(
-                                    width: 20,
-                                  ),
-                                  const SizedBox(
-                                    width: 20,
-                                  ),
-                                  _loader
-                                      ? const CircularProgressIndicator(
-                                          color: kPrimaryColor,
-                                        )
-                                      : Container(),
-                                  _loader
-                                      ? const CircularProgressIndicator(
-                                          color: kPrimaryColor)
-                                      : (data[index].download == null ||
-                                              !data[index].download!.contains(
-                                                  FirebaseAuth.instance
-                                                      .currentUser!.uid))
-                                          ? data[index].status == false
-                                              ? IconButton(
-                                                  icon: const Icon(
-                                                      Icons.download),
-                                                  onPressed: () async {
-                                                    setState(() {
-                                                      _loader = true;
-                                                    });
-                                                    try {
                                                       FileMananger.downloadFile(
                                                               data[index]
                                                                   .musique!,
@@ -194,7 +99,7 @@ class _MusiquesState extends State<Musiques> with WidgetsBindingObserver {
                                                                           " ",
                                                                           "") +
                                                                   ".mp3")
-                                                          .then((value) {
+                                                          .then((value) async {
                                                         MusiqueServices()
                                                             .simpleUpdateMusique(
                                                                 {
@@ -210,8 +115,17 @@ class _MusiquesState extends State<Musiques> with WidgetsBindingObserver {
                                                             },
                                                                 data[index]
                                                                     .id!);
+                                                        setState(() {
+                                                          _loader = false;
+                                                        });
+                                                        await OpenFile.open(
+                                                            data[index]
+                                                                .localUrl);
                                                       });
                                                     } catch (error) {
+                                                      setState(() {
+                                                        _loader = false;
+                                                      });
                                                       Fluttertoast.showToast(
                                                           msg:
                                                               "Downloaded Error",
@@ -220,63 +134,70 @@ class _MusiquesState extends State<Musiques> with WidgetsBindingObserver {
                                                           fontSize: 18,
                                                           textColor:
                                                               Colors.white);
-                                                    } finally {
-                                                      setState(() {
-                                                        _loader = false;
-                                                      });
                                                     }
-                                                  },
-                                                )
-                                              : InkWell(
-                                                  onTap: () async {
-                                                    String whatsapp =
-                                                        "+237${data[index].tel.toString().replaceAll(" ", "")}";
-                                                    String whatsappURlAndroid =
-                                                        "whatsapp://send?phone=" +
-                                                            whatsapp +
-                                                            "&text= Bonjour je veux acheter la musique ${data[index].author.toTitleCase + " - " + data[index].titre.toTitleCase} ";
-                                                    String whatappURLIos =
-                                                        "https://wa.me/$whatsapp?text=${Uri.parse("hello")}";
-                                                    if (Platform.isIOS) {
-                                                      // for iOS phone only
-                                                      if (await canLaunch(
-                                                          whatappURLIos)) {
-                                                        await launch(
-                                                            whatappURLIos,
-                                                            forceSafariVC:
-                                                                false);
-                                                      } else {
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                                const SnackBar(
-                                                                    content: Text(
-                                                                        "whatsapp no installed")));
-                                                      }
-                                                    } else {
-                                                      // android , web
-                                                      if (await canLaunch(
-                                                          whatsappURlAndroid)) {
-                                                        await launch(
-                                                            whatsappURlAndroid);
-                                                      } else {
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                                const SnackBar(
-                                                                    content: Text(
-                                                                        "whatsapp no installed")));
-                                                      }
-                                                    }
-                                                  },
-                                                  child: const Chip(
-                                                    label: Text(
-                                                        "Acheter la musique"),
-                                                    avatar: Icon(CupertinoIcons
-                                                        .download_circle),
-                                                  ),
-                                                )
-                                          : Container(),
+                                                  } else {
+                                                    await OpenFile.open(
+                                                        data[index].localUrl);
+                                                  }
+                                                } catch (e) {
+                                                  if (mounted) {
+                                                    setState(() {
+                                                      pause = null;
+                                                    });
+                                                  }
+
+                                                  Fluttertoast.showToast(
+                                                      msg:
+                                                          "Une erreur est survenu veuillez télécharger !!! ",
+                                                      backgroundColor:
+                                                          Colors.red,
+                                                      fontSize: 18,
+                                                      textColor: Colors.white);
+                                                }
+                                              },
+                                            )
+                                      : InkWell(
+                                          onTap: () async {
+                                            String whatsapp =
+                                                "+237${data[index].tel.toString().replaceAll(" ", "")}";
+                                            String whatsappURlAndroid =
+                                                "whatsapp://send?phone=" +
+                                                    whatsapp +
+                                                    "&text= Bonjour je veux acheter la musique ${data[index].author.toTitleCase + " - " + data[index].titre.toTitleCase} ";
+                                            String whatappURLIos =
+                                                "https://wa.me/$whatsapp?text=${Uri.parse("hello")}";
+                                            if (Platform.isIOS) {
+                                              // for iOS phone only
+                                              if (await canLaunch(
+                                                  whatappURLIos)) {
+                                                await launch(whatappURLIos,
+                                                    forceSafariVC: false);
+                                              } else {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(const SnackBar(
+                                                        content: Text(
+                                                            "whatsapp no installed")));
+                                              }
+                                            } else {
+                                              // android , web
+                                              if (await canLaunch(
+                                                  whatsappURlAndroid)) {
+                                                await launch(
+                                                    whatsappURlAndroid);
+                                              } else {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(const SnackBar(
+                                                        content: Text(
+                                                            "whatsapp no installed")));
+                                              }
+                                            }
+                                          },
+                                          child: const Chip(
+                                            label: Text("Acheter la musique"),
+                                            avatar: Icon(
+                                                CupertinoIcons.download_circle),
+                                          ),
+                                        ),
                                 ],
                               ),
                             ),

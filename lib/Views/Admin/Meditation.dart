@@ -91,7 +91,7 @@ class _MeditationUiState extends State<MeditationUi> {
                                     context: context,
                                     builder: (context) => AlertDialog(
                                           title: const Text(
-                                              "Voules vous vraiment tout supprimer ?"),
+                                              "Voules vous vraiment  supprimer ?"),
                                           actions: [
                                             TextButton(
                                                 onPressed: () async {
@@ -177,6 +177,7 @@ class _MeditationUiState extends State<MeditationUi> {
         backgroundColor: Colors.transparent,
         context: context,
         isScrollControlled: true,
+        enableDrag: false,
         builder: (context) =>
             StatefulBuilder(builder: (context, StateSetter setState) {
               return FractionallySizedBox(
@@ -443,6 +444,7 @@ class _MeditModelState extends State<MeditModel> {
         backgroundColor: Colors.transparent,
         context: context,
         isScrollControlled: true,
+        enableDrag: false,
         builder: (context) =>
             StatefulBuilder(builder: (context, StateSetter setState) {
               return FractionallySizedBox(

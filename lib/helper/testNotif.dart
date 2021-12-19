@@ -44,7 +44,7 @@ class NotificationService {
         // tz.TZDateTime.now(tz.local).add(Duration(seconds: seconds)),
         // tz.TZDateTime.from(
         //     DateTime.now().add(const Duration(seconds: 12)), tz.local),
-        _nextInstanceOfTenAM(const Time(13, 20)),
+        _nextInstanceOfTenAM(const Time(04, 30)),
         const NotificationDetails(
           android: AndroidNotificationDetails('main_channel', 'Main Channel',
               importance: Importance.max,
@@ -67,31 +67,13 @@ class NotificationService {
     await flutterLocalNotificationsPlugin.cancelAll();
   }
 
-  // Future<void> scheduleDailyTenAMNotification() async {
-  //   print("Yema");
-  //   await flutterLocalNotificationsPlugin.zonedSchedule(
-  //       0,
-  //       "Bonjour ...",
-  //       "La méditation du jour est déjà disponible ",
-  //       _nextInstanceOfTenAM(Time(8)),
-  //       const NotificationDetails(
-  //         android: AndroidNotificationDetails('daily notification channel id',
-  //             'daily notification channel name',
-  //             channelDescription: 'daily notification description'),
-  //       ),
-  //       androidAllowWhileIdle: true,
-  //       uiLocalNotificationDateInterpretation:
-  //           UILocalNotificationDateInterpretation.absoluteTime,
-  //       matchDateTimeComponents: DateTimeComponents.time);
-  // }
-
   tz.TZDateTime _nextInstanceOfTenAM(Time time) {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, now.year, now.month,
         now.day, time.hour, time.minute, time.second);
 
     return scheduledDate.isBefore(now)
-        ? scheduledDate.add(const Duration(days: 1))
+        ? scheduledDate.add(const Duration(seconds: 10))
         : scheduledDate;
   }
 }

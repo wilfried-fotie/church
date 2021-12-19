@@ -57,7 +57,7 @@ class _EnseignementState extends State<Enseignement> {
                         .toList());
               } else {
                 return const Center(
-                  child: Text("Une erreur c'est produite"),
+                  child: CircularProgressIndicator(color: kPrimaryColor),
                 );
               }
             }));

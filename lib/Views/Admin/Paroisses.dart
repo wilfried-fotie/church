@@ -83,7 +83,6 @@ class _ParoissesUiState extends State<ParoissesUi> {
                   ),
                 )),
             body: Consumer<List<Paroisses?>>(builder: (_, paroisses, __) {
-              print(paroisses.length);
               return ListView(
                 controller: scroll,
                 children: paroisses.map((value) {
@@ -320,6 +319,7 @@ class _ParoissesModelState extends State<ParoissesModel> {
 
   late final TextEditingController departement =
       TextEditingController(text: widget.data.departement);
+  bool _loader2 = false;
 
   @override
   void dispose() {
@@ -342,9 +342,56 @@ class _ParoissesModelState extends State<ParoissesModel> {
         child: ListTile(
           trailing: IconButton(
               onPressed: () {
-                updateParoisse(context, _medData, widget.data);
+                showDialog(
+                    context: context,
+                    builder: (context) => StatefulBuilder(
+                            builder: (context, StateSetter setState) {
+                          return AlertDialog(
+                            title: _loader2
+                                ? const Center(
+                                    child: CircularProgressIndicator(
+                                        color: kPrimaryColor),
+                                  )
+                                : const Text(
+                                    "Voules vous vraiment  supprimer ?"),
+                            actions: _loader2
+                                ? []
+                                : [
+                                    TextButton(
+                                        onPressed: () async {
+                                          setState(() {
+                                            _loader2 = true;
+                                          });
+                                          try {
+                                            await _medData
+                                                .delete(widget.data.id!);
+                                          } catch (e) {
+                                            Fluttertoast.showToast(
+                                                msg: "Une erreur est survenu",
+                                                backgroundColor: Colors.red,
+                                                fontSize: 18,
+                                                textColor: Colors.white);
+                                          } finally {
+                                            if (mounted) {
+                                              setState(() {
+                                                _loader2 = false;
+                                              });
+                                            }
+
+                                            Navigator.of(context).pop(false);
+                                          }
+                                        },
+                                        child: const Text("Supprimer")),
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop(false);
+                                        },
+                                        child: const Text("Annuler")),
+                                  ],
+                          );
+                        }));
               },
-              icon: const Icon(CupertinoIcons.pen)),
+              icon: const Icon(Icons.delete)),
           title: Text("Paroisse :  " + widget.data.paroisse),
           subtitle: Padding(
             padding: const EdgeInsets.only(top: 10.0, bottom: 0),

@@ -55,7 +55,7 @@ class _GroupesState extends State<Groupes> {
                                                                 kPrimaryColor),
                                                   )
                                                 : const Text(
-                                                    "Voules vous vraiment tout supprimer ?"),
+                                                    "Voules vous vraiment  supprimer ?"),
                                             actions: _loader
                                                 ? []
                                                 : [

@@ -1,15 +1,18 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:church/Services/PubService.dart';
 import 'package:church/Views/Home/MeditationDetail.dart';
 import 'package:church/helper/NotData.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../Model/Meditation.dart';
+import '../../Model/PubModel.dart';
 import '../../Services/MeditationService.dart';
 import '../../helper/FecthingData.dart';
 import '../../tools.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class MeditationView extends StatefulWidget {
   const MeditationView({Key? key}) : super(key: key);
@@ -220,8 +223,8 @@ class MedTool extends StatelessWidget {
                                       .textTheme
                                       .bodyText2!
                                       .copyWith(fontSize: 15),
-                                  text: currentMeditation.body.length > 500
-                                      ? currentMeditation.body.substring(0, 500)
+                                  text: currentMeditation.body.length > 300
+                                      ? currentMeditation.body.substring(0, 300)
                                       : currentMeditation.body),
                               currentMeditation.body.length > 500
                                   ? const TextSpan(text: " ... ")
@@ -238,6 +241,104 @@ class MedTool extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
+              const SizedBox(
+                height: 5,
+              ),
+              StreamBuilder<List<PubModel>>(
+                  stream: PubService().getStreamPubs(10),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                      List<PubModel> dataPubs = snapshot.data!;
+                      return Column(
+                        children: [
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.only(left: 30),
+                            child: const Text(
+                              "Publicité",
+                              style: kBoldTextPrimaryColor,
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          CarouselSlider(
+                            options: CarouselOptions(
+                              aspectRatio: 2.0,
+                              enlargeCenterPage: true,
+                              scrollDirection: Axis.horizontal,
+                              autoPlay: true,
+                            ),
+                            items: dataPubs.map((data) {
+                              return Builder(
+                                builder: (BuildContext context) {
+                                  return GestureDetector(
+                                    onTap: data.url != null && data.url != ""
+                                        ? () async {
+                                            if (!await launch(data.url!)) {}
+                                          }
+                                        : null,
+                                    child: Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 30.0),
+                                      child: CachedNetworkImage(
+                                        height: 180,
+                                        fit: BoxFit.cover,
+                                        imageUrl: data.image,
+                                        placeholder: (context, url) =>
+                                            const Center(
+                                          child: CircularProgressIndicator(
+                                              color: kPrimaryColor),
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            }).toList(),
+                          )
+                          // SingleChildScrollView(
+                          //   scrollDirection: Axis.horizontal,
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          //     children: dataPubs
+                          //         .map((data) => GestureDetector(
+                          //               onTap: data.url != null &&
+                          //                       data.url != ""
+                          //                   ? () async {
+                          //                       if (!await launch(data.url!))
+                          //                         throw 'Could not launch data.url!';
+                          //                     }
+                          //                   : null,
+                          //               child: Container(
+                          //                 margin: const EdgeInsets.symmetric(
+                          //                     horizontal: 30.0),
+                          //                 child: CachedNetworkImage(
+                          //                   height: 180,
+                          //                   fit: BoxFit.cover,
+                          //                   imageUrl: data.image,
+                          //                   placeholder: (context, url) =>
+                          //                       const Center(
+                          //                     child: CircularProgressIndicator(
+                          //                         color: kPrimaryColor),
+                          //                   ),
+                          //                   errorWidget:
+                          //                       (context, url, error) =>
+                          //                           const Icon(Icons.error),
+                          //                 ),
+                          //               ),
+                          //             ))
+                          //         .toList(),
+                          //   ),
+                          // ),
+                        ],
+                      );
+                    } else {
+                      return Container();
+                    }
+                  }),
+              const SizedBox(height: 30),
               Center(
                 child: Text(
                   currentMeditation.question != "" ? "Question" : "",

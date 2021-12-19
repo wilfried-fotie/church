@@ -1,19 +1,13 @@
 import 'package:church/Views/Home/Livres.dart';
 import 'package:church/Views/Home/Widget/Drawer.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:intl/intl.dart'; //for date format
 import 'package:intl/date_symbol_data_local.dart';
-import '../helper/testNotif.dart';
 import '../tools.dart';
-import 'Eglises.dart';
 import 'Home/Enseignement.dart';
 import 'Home/Meditation.dart';
 import 'Home/Musique.dart';
-import 'package:timezone/timezone.dart' as tz;
-import 'package:timezone/data/latest.dart' as tz;
 
 class HomeDays extends StatefulWidget {
   const HomeDays({Key? key}) : super(key: key);
@@ -29,10 +23,6 @@ class _HomeDaysState extends State<HomeDays> {
   void initState() {
     super.initState();
     initializeDateFormatting();
-    tz.initializeTimeZones();
-    NotificationService().cancelAllNotifications();
-    NotificationService().showNotification(
-        1, "Bonjour", "La méditation du jour est déja disponible", 2);
 
     Intl.defaultLocale = "fr_FR";
   }

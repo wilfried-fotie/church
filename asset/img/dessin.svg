@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="78.364265mm"
+   height="33.094246mm"
+   viewBox="0 0 78.364265 33.094246"
+   version="1.1"
+   id="svg1016"
+   inkscape:version="1.0.1 (0767f8302a, 2020-10-17)"
+   sodipodi:docname="dessin.svg">
+  <defs
+     id="defs1010" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="19.707505"
+     inkscape:cy="-207.94339"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     fit-margin-left="2.1"
+     fit-margin-top="2"
+     fit-margin-bottom="1.5"
+     fit-margin-right="2"
+     inkscape:window-width="1440"
+     inkscape:window-height="836"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata1013">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-100.61906,-203.18502)">
+    <g
+       id="g1008"
+       transform="translate(52.448224,154.91419)">
+      <g
+         id="g903">
+        <rect
+           style="fill:#ff6500;stroke-width:0.264583"
+           id="rect847"
+           width="31.333857"
+           height="29.594244"
+           x="50.270832"
+           y="50.270832"
+           ry="7.2934666" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:19.7556px;line-height:1.25;font-family:Montserrat;-inkscape-font-specification:'Montserrat Bold';stroke-width:0.264583"
+           x="54.824841"
+           y="72.525017"
+           id="text851"><tspan
+             sodipodi:role="line"
+             id="tspan849"
+             x="54.824841"
+             y="72.525017"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:19.7556px;font-family:Montserrat;-inkscape-font-specification:'Montserrat Bold';stroke-width:0.264583">Mi</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-weight:bold;font-size:19.7556px;line-height:1.25;font-family:Manjari;-inkscape-font-specification:'Manjari Bold';stroke-width:0.264583"
+           x="82.207184"
+           y="73.023605"
+           id="text855"><tspan
+             sodipodi:role="line"
+             id="tspan853"
+             x="82.207184"
+             y="73.023605"
+             style="font-size:19.7556px;stroke-width:0.264583">Sofe</tspan></text>
+      </g>
+    </g>
+  </g>
+</svg>

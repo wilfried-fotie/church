@@ -263,9 +263,9 @@ class _RegistrationState extends State<Registration> {
                                             builder: (context, snapshot) {
                                               if (!_loader &&
                                                   snapshot.hasData &&
-                                                  snapshot.data! < 60) {
+                                                  snapshot.data! < 30) {
                                                 return Text(
-                                                  "Si vous ne recevez pas le code au bout de 60 s reessayer " +
+                                                  "Si vous ne recevez pas le code au bout de 30 s reessayer " +
                                                       snapshot.data.toString() +
                                                       " seconds",
                                                   textAlign: TextAlign.center,

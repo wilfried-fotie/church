@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:church/Services/FileManager.dart';
 import 'package:church/Services/LIvresServices.dart';
+import 'package:church/Views/Home/Livres.dart';
 import 'package:church/Views/Widgets/CustomButton.dart';
+import 'package:church/Views/Widgets/MyApp.dart';
 import 'package:church/helper/extention.dart';
 import 'package:church/tools.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -28,16 +30,8 @@ class _LivreDetailState extends State<LivreDetail> {
   late LivreModel data = widget.data;
 
   int number = 1;
-  bool _loader = false, _download = false;
-  @override
-  void initState() {
-    setState(() {
-      _loader = false;
-    });
-
-    super.initState();
-  }
-
+  bool _download = false;
+  String? _lacal;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -188,97 +182,78 @@ class _LivreDetailState extends State<LivreDetail> {
                       }))
               : Container(
                   alignment: Alignment.center,
-                  child: (!(_loader == true && _download == true) &&
-                          !(data.download != null &&
-                              data.download!.contains(
-                                  FirebaseAuth.instance.currentUser!.uid)))
-                      ? Container(
-                          alignment: Alignment.center,
-                          width: 200,
-                          child: TextButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  kSecondaryColor),
-                            ),
-                            onPressed: () {
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: 150,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(kSecondaryColor),
+                      ),
+                      onPressed: () async {
+                        if (!await FileMananger.contain(
+                            data.titre.replaceAll(" ", ""), "pdf")) {
+                          setState(() {
+                            _download = true;
+                          });
+
+                          try {
+                            FileMananger.downloadFile(data.pdf!,
+                                    data.titre.replaceAll(" ", "") + ".pdf")
+                                .then((value) {
                               setState(() {
-                                _loader = true;
+                                _download = false;
+                                _lacal = value;
                               });
-                              try {
-                                FileMananger.downloadFile(data.pdf!,
-                                        data.titre.replaceAll(" ", "") + ".pdf")
-                                    .then((value) {
-                                  setState(() {
-                                    _download = true;
-                                  });
 
-                                  return Navigator.push(context,
-                                      MaterialPageRoute(builder: (_) {
-                                    LivreService().simpleUpdateLivre({
-                                      "download": FieldValue.arrayUnion([
-                                        FirebaseAuth.instance.currentUser!.uid
-                                      ]),
-                                      "localFile": value
-                                    }, data.id!);
+                              return Navigator.push(context,
+                                  MaterialPageRoute(builder: (_) {
+                                LivreService().simpleUpdateLivre({
+                                  "download": FieldValue.arrayUnion(
+                                      [FirebaseAuth.instance.currentUser!.uid]),
+                                  "localFile": value
+                                }, data.id!);
 
-                                    return PdfLocalView(
-                                        url: value, title: data.titre);
-                                  }));
-                                }).catchError((e) => Fluttertoast.showToast(
-                                        msg: "Downloaded Error",
-                                        backgroundColor: kPrimaryColor,
-                                        fontSize: 18,
-                                        textColor: Colors.white));
-                              } catch (error) {
-                                setState(() {
-                                  _loader = false;
-                                });
-                              }
-                            },
-                            child: Row(children: [
-                              _loader
-                                  ? const CircularProgressIndicator(
-                                      color: kPrimaryColor)
-                                  : Container(),
-                              _loader
-                                  ? const SizedBox(
-                                      width: 10,
-                                    )
-                                  : Container(),
-                              const Text("Télécharger",
-                                  style: TextStyle(color: kPrimaryColor)),
-                              const Icon(Icons.download, color: kPrimaryColor),
-                            ]),
-                          ))
-                      : Container(
-                          alignment: Alignment.center,
-                          width: 150,
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  kSecondaryColor),
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => PdfLocalView(
-                                          url: data.localFile!,
-                                          title: data.titre)));
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Icon(Icons.menu_book, color: kPrimaryColor),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text("Lire le Livre",
-                                    style: TextStyle(color: kPrimaryColor)),
-                              ],
-                            ),
+                                return PdfLocalView(
+                                    url: value, title: data.titre);
+                              }));
+                            }).catchError((e) => Fluttertoast.showToast(
+                                    msg: "Downloaded Error",
+                                    backgroundColor: kPrimaryColor,
+                                    fontSize: 18,
+                                    textColor: Colors.white));
+                          } catch (error) {
+                            setState(() {
+                              _download = false;
+                            });
+                          }
+                        } else {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => PdfLocalView(
+                                      url: data.localFile!,
+                                      title: data.titre)));
+                        }
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _download
+                              ? const CircularProgressIndicator(
+                                  color: kPrimaryColor,
+                                )
+                              : const Icon(Icons.menu_book,
+                                  color: kPrimaryColor),
+                          const SizedBox(
+                            width: 10,
                           ),
-                        ),
+                          const Text("Lire le Livre",
+                              style: TextStyle(color: kPrimaryColor)),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
           // TextButton(
           //     child: Row(
@@ -337,12 +312,20 @@ class PdfLocalView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(title),
-        ),
-        body: SafeArea(
-            child:
-                SfPdfViewer.file(File(url), canShowPaginationDialog: false)));
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context);
+        Navigator.pop(context);
+
+        return false;
+      },
+      child: Scaffold(
+          appBar: AppBar(
+            title: Text(title),
+          ),
+          body: SafeArea(
+              child:
+                  SfPdfViewer.file(File(url), canShowPaginationDialog: false))),
+    );
   }
 }

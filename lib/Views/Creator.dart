@@ -21,6 +21,7 @@ class Creator extends StatelessWidget {
         title: const Text("Développeur"),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Spacer(),
           Container(
@@ -33,7 +34,7 @@ class Creator extends StatelessWidget {
                   borderRadius: BorderRadius.circular(50),
                   child: Semantics(
                       child: Image.asset(
-                    "asset/img/profil-1.png",
+                    "asset/img/myLogo.png",
                     height: 200,
                   )))),
           const Spacer(),
@@ -43,9 +44,24 @@ class Creator extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 10),
+            child: Text(
+              "Contact: ",
+              textAlign: TextAlign.left,
+              style: kBoldText,
+            ),
+          ),
           const Center(
             child: Text(
-              "Contact +237 678 61 56 77 ",
+              "+237 678 61 56 77",
+              textAlign: TextAlign.center,
+              style: kBoldText,
+            ),
+          ),
+          const Center(
+            child: Text(
+              "contactmisofe@gmail.com",
               textAlign: TextAlign.center,
               style: kBoldText,
             ),
@@ -53,11 +69,22 @@ class Creator extends StatelessWidget {
           const SizedBox(
             height: 30,
           ),
-          ElevatedButton(
-              onPressed: () {
-                _makePhoneCall("+237678615677");
-              },
-              child: const Text("M'appeler")),
+          Center(
+            child: ElevatedButton(
+                onPressed: () {
+                  _makePhoneCall("+237678615677");
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.phone),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text("Nous appeler"),
+                  ],
+                )),
+          ),
           const Spacer(),
         ],
       ),

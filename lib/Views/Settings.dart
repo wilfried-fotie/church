@@ -7,10 +7,12 @@ import 'package:church/helper/testNotif.dart';
 import 'package:church/tools.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:provider/src/provider.dart';
 
+import '../helper/AdHelper.dart';
 import '../helper/Notification.dart';
 import '../helper/SharedPref.dart';
 import 'Admin/Home.dart';
@@ -125,24 +127,24 @@ class _SettingsState extends State<Settings> {
             AdaptiveTheme.of(context).toggleThemeMode();
           },
         ),
-        const SizedBox(
-          height: 10,
-        ),
-        ListTile(
-          title: const Text(
-            "Nous Contacter",
-            style: TextStyle(fontFamily: "Noto", fontWeight: FontWeight.bold),
-          ),
-          leading: const Iiconiseur(icon: Icon(Icons.phone)),
-          onTap: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (_) => const MainScreen()));
-          },
-        ),
+        // const SizedBox(
+        //   height: 10,
+        // ),
+        // ListTile(
+        //   title: const Text(
+        //     "Nous Contacter",
+        //     style: TextStyle(fontFamily: "Noto", fontWeight: FontWeight.bold),
+        //   ),
+        //   leading: const Iiconiseur(icon: Icon(Icons.phone)),
+        //   onTap: () {
+        //     Navigator.push(
+        //         context, MaterialPageRoute(builder: (_) => const MainScreen()));
+        //   },
+        // ),
 
-        const SizedBox(
-          height: 10,
-        ),
+        // const SizedBox(
+        //   height: 10,
+        // ),
 
         const SizedBox(
           height: 10,
@@ -216,7 +218,7 @@ class _SettingsState extends State<Settings> {
               color: kPrimaryColor, child: const Icon(Icons.dashboard)),
           child: ListTile(
             title: const Text(
-              "A porpos de l'application",
+              "A propos de l'application",
               style: TextStyle(fontFamily: "Noto", fontWeight: FontWeight.bold),
             ),
             leading: const Iiconiseur(icon: Icon(Icons.info)),
@@ -309,11 +311,39 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  late final BannerAd _bannerAd = BannerAd(
+    adUnitId: AdHelper.bannerAdUnitId,
+    request: const AdRequest(),
+    size: AdSize.banner,
+    listener: BannerAdListener(
+      onAdLoaded: (_) {
+        setState(() {
+          _isBannerAdReady = true;
+        });
+      },
+      onAdFailedToLoad: (ad, err) {
+        print('Failed to load a banner ad: --------------- ${err.message}');
+        _isBannerAdReady = false;
+        ad.dispose();
+      },
+    ),
+  );
+
+  bool _isBannerAdReady = false;
+
   @override
   void initState() {
     super.initState();
 
+    _bannerAd.load();
     tz.initializeTimeZones();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -332,28 +362,37 @@ class _MainScreenState extends State<MainScreen> {
                 height: 40,
                 width: 200,
                 color: Colors.red,
-                child: Center(
+                child: const Center(
                   child: Text(
                     "Cancel All Notifications",
                   ),
                 ),
               ),
             ),
+            _isBannerAdReady
+                ? Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      color: kSecondaryColor,
+                      width: _bannerAd.size.width.toDouble(),
+                      height: _bannerAd.size.height.toDouble(),
+                      child: AdWidget(ad: _bannerAd),
+                    ),
+                  )
+                : Container(
+                    color: kPrimaryColor, width: double.infinity, height: 20),
             GestureDetector(
               onTap: () async {
-                NotificationService().showNotification(1, "Bonjour",
-                    "  la méditation du jour est déjà disponible", 1);
                 tz.initializeTimeZones();
-                await NotificationService()
-                    .showNotification(1, "Yema", "Test", 2);
-                print("Yema");
+                await NotificationService().showNotification(1, "Bonjour",
+                    "  La méditation du jour est déjà disponible", 2);
               },
               child: Container(
                 height: 40,
                 width: 200,
                 color: Colors.green,
-                child: Center(
-                  child: Text("Show Notification"),
+                child: const Center(
+                  child: Text("Show note"),
                 ),
               ),
             ),

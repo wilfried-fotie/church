@@ -135,40 +135,42 @@ class LivesVideos extends StatelessWidget {
                             title: const Center(
                                 child: Text("Merci Pour Votre Contribution")),
                             children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.all(20.0),
-                                    child: Text(
-                                        "1 -Tapez deux fois notre numéro de téléphone pour le selectionner et le copié. \n 2 - Selectionner Orange money ou MTN money \n 3 - au niveau du numéro de téléphone maintenez le champs jusqu'à voir apparaître coller et cliquer dessus \n \t Merci"),
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  const SelectableText("677660862"),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  const SelectableText("678615677"),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  const Text("Faire le don par :"),
-                                  TextButton(
-                                      onPressed: () async {
-                                        await _makePhoneCall("#150#");
-                                      },
-                                      child: const Text("Orange Money")),
-                                  TextButton(
-                                      onPressed: () async {
-                                        await _makePhoneCall("*126#");
-                                      },
-                                      child: const Text("MTN Mobile Money")),
-                                  const SizedBox(
-                                    height: 20,
-                                  )
-                                ],
+                              SingleChildScrollView(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.all(20.0),
+                                      child: Text(
+                                          "1 -Tapez deux fois sur notre numéro de téléphone pour le selectionner et le copier. \n \n 2 - Selectionner Orange money ou MTN money \n \n 3 - au niveau du numéro de téléphone maintenez le champs jusqu'à voir apparaître coller et cliquer dessus \n \n \t Merci"),
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    const SelectableText("677660862"),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    const SelectableText("678615677"),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    const Text("Faire le don par :"),
+                                    TextButton(
+                                        onPressed: () async {
+                                          await _makePhoneCall("#150#");
+                                        },
+                                        child: const Text("Orange Money")),
+                                    TextButton(
+                                        onPressed: () async {
+                                          await _makePhoneCall("*126#");
+                                        },
+                                        child: const Text("MTN Mobile Money")),
+                                    const SizedBox(
+                                      height: 20,
+                                    )
+                                  ],
+                                ),
                               )
                             ],
                           );

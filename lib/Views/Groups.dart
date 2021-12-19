@@ -51,6 +51,7 @@ class _GroupsState extends State<Groups> {
               showModalBottomSheet(
                   backgroundColor: Colors.transparent,
                   context: context,
+                  enableDrag: false,
                   isScrollControlled: true,
                   builder:
                       (context) => StatefulBuilder(
@@ -61,7 +62,7 @@ class _GroupsState extends State<Groups> {
                                     : Alignment.bottomCenter,
                                 children: [
                                   FractionallySizedBox(
-                                      heightFactor: 1,
+                                      heightFactor: .6,
                                       child: Container(
                                           decoration: const BoxDecoration(
                                               color: Colors.white,

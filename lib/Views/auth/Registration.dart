@@ -1,8 +1,10 @@
+import 'package:church/ModelView/Invite.dart';
 import 'package:church/ModelView/MyLogin.dart';
 import 'package:church/Views/Widgets/CustomButton.dart';
 import 'package:church/Views/Widgets/Header.dart';
 import 'package:church/Views/auth/Choice.dart';
 import 'package:church/Views/auth/SignIn.dart';
+import 'package:church/helper/SharedPref.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -263,7 +265,7 @@ class _RegistrationState extends State<Registration> {
                                             builder: (context, snapshot) {
                                               if (!_loader &&
                                                   snapshot.hasData &&
-                                                  snapshot.data! < 30) {
+                                                  snapshot.data! < 5) {
                                                 return Text(
                                                   "Si vous ne recevez pas le code au bout de 30 s reessayer " +
                                                       snapshot.data.toString() +
@@ -275,6 +277,12 @@ class _RegistrationState extends State<Registration> {
                                                     child: const Text(
                                                         "Essayez de nouveau"),
                                                     onPressed: () {
+                                                      // Navigator.push(
+                                                      //   context,
+                                                      //   MaterialPageRoute(
+                                                      //       builder: (context) =>
+                                                      //           const Registration()),
+                                                      // );
                                                       setState(() {
                                                         otp = true;
                                                         _error = "";
@@ -294,6 +302,21 @@ class _RegistrationState extends State<Registration> {
                 style: const TextStyle(color: Colors.redAccent),
               ),
             ),
+            const Text(
+              "Mode Invité accéder à l'application sans vous enregistrer",
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+                alignment: Alignment.center,
+                child: CustomButton(
+                    title: "Mode Invité",
+                    onClick: () async {
+                      ProfilPreferences.toggleInvite();
+                      context.read<Invite>().toggleStatus();
+                    }))
           ],
         ),
       ),

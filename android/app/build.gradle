@@ -54,7 +54,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.digitalsekou.church"
+        applicationId "com.example.church"
         multiDexEnabled true
         // minSdkVersion flutter.minSdkVersion
         minSdkVersion 19

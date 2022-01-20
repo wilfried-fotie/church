@@ -1,3 +1,4 @@
+import 'package:church/ModelView/Invite.dart';
 import 'package:church/tools.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -45,6 +46,9 @@ void main() async {
               ChangeNotifierProvider(
                 create: (_) => MyLogin(),
               ),
+              ChangeNotifierProvider(
+                create: (_) => Invite(),
+              ),
             ],
             child: MaterialApp(
                 title: 'Eglise App',
@@ -55,3 +59,6 @@ void main() async {
                 home: const Choice()),
           )));
 }
+
+
+//J'ai juste envie d'ecrire meme si ce sont des commentaires...

@@ -1,7 +1,6 @@
 import 'package:church/helper/extention.dart';
 import 'package:church/tools.dart';
 import 'package:flutter/material.dart';
-import "package:story_view/story_view.dart";
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
 
 import '../Model/ParoissesModel.dart';

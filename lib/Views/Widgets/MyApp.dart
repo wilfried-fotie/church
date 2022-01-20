@@ -1,6 +1,8 @@
 import 'package:church/ModelView/BottomNavigationOffstage.dart';
+import 'package:church/ModelView/Invite.dart';
 import 'package:church/Views/Home/DetailEnseignement.dart';
 import 'package:church/Views/Home/MeditationDetail.dart';
+import 'package:church/helper/SharedPref.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,6 +15,8 @@ import '../Settings.dart';
 import '../Story.dart';
 import 'package:provider/provider.dart';
 
+import 'NotConnect.dart';
+
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
   @override
@@ -21,6 +25,15 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int _selectIndex = 2;
+  bool invite = false;
+
+  @override
+  void initState() {
+    ProfilPreferences.status().then((value) => setState(() {
+          invite = value;
+        }));
+    super.initState();
+  }
 
   final List<GlobalKey<NavigatorState>> _navigatorKeys = [
     GlobalKey<NavigatorState>(),
@@ -37,11 +50,13 @@ class _MyAppState extends State<MyApp> {
   }
 
   Map<String, WidgetBuilder> _routeBuilders(BuildContext context, int index) {
+    Invite prov = Provider.of<Invite>(context);
+
     return {
       '/': (context) {
         return [
           const ParoissesUI(),
-          const Groups(),
+          prov.logged ? const NotConnect() : const Groups(),
           const HomeDays(),
           const LivesVideos(),
           const Settings()

@@ -50,11 +50,11 @@ class _LivreDetailState extends State<LivreDetail> {
                     fit: BoxFit.cover,
                     imageUrl: data.image!,
                     placeholder: (context, url) => const Center(
-                      child: CircularProgressIndicator(color: kPrimaryColor),
-                    ),
+                          child:
+                              CircularProgressIndicator(color: kPrimaryColor),
+                        ),
                     errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                  )
+                        const Icon(Icons.error))
                 : Container(),
           ),
           Padding(

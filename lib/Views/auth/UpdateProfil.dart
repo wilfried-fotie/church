@@ -78,7 +78,7 @@ class _UpdateProfilState extends State<UpdateProfil> {
                             const SizedBox(
                               height: 20,
                             ),
-                            data != null && !_loader
+                            data != null && !_loader && data.photo != null
                                 ? Container(
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,

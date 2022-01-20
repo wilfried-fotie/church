@@ -1,3 +1,4 @@
+import 'package:church/helper/SharedPref.dart';
 import 'package:church/helper/extention.dart';
 import 'package:flutter/material.dart';
 import '../tools.dart';
@@ -17,6 +18,14 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   CurrentPage pageManager = CurrentPage.HOME;
+  bool invite = false;
+  @override
+  void initState() {
+    ProfilPreferences.status().then((value) => setState(() {
+          invite = value;
+        }));
+    super.initState();
+  }
 
   void onRegister() {
     setState(() {
@@ -84,7 +93,7 @@ class _HomeState extends State<Home> {
               //     border: true),
               const SizedBox(height: 20),
               CustomButton(
-                title: "Commencer maintenant",
+                title: "Commencer maintenant ",
                 onClick: onSingIn,
               )
             ]),

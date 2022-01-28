@@ -317,24 +317,8 @@ class _SettingsState extends State<Settings> {
             );
           },
         ),
-      ],
-    ));
-  }
-}
 
-class Test extends StatelessWidget {
-  const Test({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: ListView(
-      children: [
-        ElevatedButton(
-            onPressed: () => Notofication.showNotif(
-                title: "Bonjour Découvrez la méditation du jour",
-                body: "la meditaion pardemz z j h zh ks zS js,kj"),
-            child: const Text("Test"))
+        // Container(color: Colors.red, height: 100, child: const MainScreen())
       ],
     ));
   }
@@ -348,6 +332,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  bool _isBannerAdReady = false;
+
   late final BannerAd _bannerAd = BannerAd(
     adUnitId: AdHelper.bannerAdUnitId,
     request: const AdRequest(),
@@ -359,14 +345,12 @@ class _MainScreenState extends State<MainScreen> {
         });
       },
       onAdFailedToLoad: (ad, err) {
-        print('Failed to load a banner ad: --------------- ${err.message}');
         _isBannerAdReady = false;
+
         ad.dispose();
       },
     ),
   );
-
-  bool _isBannerAdReady = false;
 
   @override
   void initState() {
@@ -385,57 +369,69 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            GestureDetector(
-              onTap: () {
-                NotificationService().cancelAllNotifications();
-              },
-              child: Container(
-                height: 40,
-                width: 200,
-                color: Colors.red,
-                child: const Center(
-                  child: Text(
-                    "Cancel All Notifications",
-                  ),
-                ),
-              ),
+    return _isBannerAdReady
+        ? Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              color: kSecondaryColor,
+              width: _bannerAd.size.width.toDouble(),
+              height: _bannerAd.size.height.toDouble(),
+              child: AdWidget(ad: _bannerAd),
             ),
-            _isBannerAdReady
-                ? Align(
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                      color: kSecondaryColor,
-                      width: _bannerAd.size.width.toDouble(),
-                      height: _bannerAd.size.height.toDouble(),
-                      child: AdWidget(ad: _bannerAd),
-                    ),
-                  )
-                : Container(
-                    color: kPrimaryColor, width: double.infinity, height: 20),
-            GestureDetector(
-              onTap: () async {
-                tz.initializeTimeZones();
-                await NotificationService().showNotification(1, "Bonjour",
-                    "  La méditation du jour est déjà disponible", 2);
-              },
-              child: Container(
-                height: 40,
-                width: 200,
-                color: Colors.green,
-                child: const Center(
-                  child: Text("Show note"),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+          )
+        : const Text("Publicite");
+
+    // Scaffold(
+    //   body: Center(
+    //     child: Column(
+    //       crossAxisAlignment: CrossAxisAlignment.center,
+    //       mainAxisAlignment: MainAxisAlignment.center,
+    //       children: [
+    //         GestureDetector(
+    //           onTap: () {
+    //             NotificationService().cancelAllNotifications();
+    //           },
+    //           child: Container(
+    //             height: 40,
+    //             width: 200,
+    //             color: Colors.red,
+    //             child: const Center(
+    //               child: Text(
+    //                 "Cancel All Notifications",
+    //               ),
+    //             ),
+    //           ),
+    //         ),
+    //         _isBannerAdReady
+    //             ? Align(
+    //                 alignment: Alignment.topCenter,
+    //                 child: Container(
+    //                   color: kSecondaryColor,
+    //                   width: _bannerAd.size.width.toDouble(),
+    //                   height: _bannerAd.size.height.toDouble(),
+    //                   child: AdWidget(ad: _bannerAd),
+    //                 ),
+    //               )
+    //             : Container(
+    //                 color: kPrimaryColor, width: double.infinity, height: 20),
+    //         GestureDetector(
+    //           onTap: () async {
+    //             tz.initializeTimeZones();
+    //             await NotificationService().showNotification(1, "Bonjour",
+    //                 "  La méditation du jour est déjà disponible", 2);
+    //           },
+    //           child: Container(
+    //             height: 40,
+    //             width: 200,
+    //             color: Colors.green,
+    //             child: const Center(
+    //               child: Text("Show note"),
+    //             ),
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
 }

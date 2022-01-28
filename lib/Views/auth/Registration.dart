@@ -94,67 +94,12 @@ class _RegistrationState extends State<Registration> {
                                   height: 20,
                                 ),
                                 CustomButton(
-                                  title: "Connectez-vous!",
-                                  onClick: () async {
-                                    if (key.currentState!.validate()) {
-                                      FocusScope.of(context).unfocus();
-
-                                      String phone =
-                                          _phoneNumber.value.text.trim();
-                                      setState(() {
-                                        _loader = !_loader;
-                                      });
-
-                                      try {
-                                        await _auth.verifyPhoneNumber(
-                                          phoneNumber: "+237" + phone,
-                                          verificationCompleted:
-                                              (PhoneAuthCredential
-                                                  credential) async {
-                                            await _auth.signInWithCredential(
-                                                credential);
-
-                                            if (_auth.currentUser?.uid !=
-                                                null) {
-                                              Navigator.pushNamed(
-                                                  context, '/signIn');
-                                            }
-                                          },
-                                          verificationFailed:
-                                              (FirebaseAuthException e) {
-                                            setState(() {
-                                              _loader = false;
-                                              otp = false;
-                                            });
-                                            if (e.code ==
-                                                'invalid-phone-number') {
-                                              setState(() {
-                                                _error =
-                                                    "Numéro de tel invalide";
-                                              });
-                                            }
-                                          },
-                                          codeSent: (String verificationId,
-                                              int? resendToken) async {
-                                            setState(() {
-                                              _verificationId = verificationId;
-                                              _loader = !_loader;
-                                              otp = !otp;
-                                            });
-                                          },
-                                          codeAutoRetrievalTimeout:
-                                              (String verificationId) {},
-                                        );
-                                      } catch (error) {
-                                        if (mounted) {
-                                          setState(() {
-                                            _error = "Une erreur est survenu";
-                                          });
-                                        }
+                                    title: "Connectez-vous!",
+                                    onClick: () {
+                                      if (key.currentState!.validate()) {
+                                        _sendNotification();
                                       }
-                                    }
-                                  },
-                                ),
+                                    }),
                               ],
                             ))
                         : Container(
@@ -217,44 +162,13 @@ class _RegistrationState extends State<Registration> {
                                                 borderRadius:
                                                     BorderRadius.circular(20)),
                                             child: CustomButton(
-                                              title: "Confirmer",
-                                              onClick: () async {
-                                                if (key2.currentState!
-                                                    .validate()) {
-                                                  setState(() {
-                                                    _loader = true;
-                                                  });
-                                                  FocusScope.of(context)
-                                                      .unfocus();
-                                                  try {
-                                                    PhoneAuthCredential
-                                                        credential =
-                                                        PhoneAuthProvider
-                                                            .credential(
-                                                                verificationId:
-                                                                    _verificationId,
-                                                                smsCode: _otp
-                                                                    .value
-                                                                    .text);
-                                                    await _auth
-                                                        .signInWithCredential(
-                                                            credential);
-
-                                                    setState(() {
-                                                      _loader = _loader;
-                                                    });
-                                                  } catch (error) {
-                                                    if (mounted) {
-                                                      setState(() {
-                                                        _error =
-                                                            "Le code saisie est invalide";
-                                                        _loader = false;
-                                                      });
-                                                    }
+                                                title: "Confirmer",
+                                                onClick: () {
+                                                  if (key2.currentState!
+                                                      .validate()) {
+                                                    _sendNotif();
                                                   }
-                                                }
-                                              },
-                                            ),
+                                                }),
                                           ),
                                         ),
                                         const SizedBox(
@@ -265,7 +179,7 @@ class _RegistrationState extends State<Registration> {
                                             builder: (context, snapshot) {
                                               if (!_loader &&
                                                   snapshot.hasData &&
-                                                  snapshot.data! < 5) {
+                                                  snapshot.data! < 30) {
                                                 return Text(
                                                   "Si vous ne recevez pas le code au bout de 30 s reessayer " +
                                                       snapshot.data.toString() +
@@ -273,22 +187,32 @@ class _RegistrationState extends State<Registration> {
                                                   textAlign: TextAlign.center,
                                                 );
                                               } else {
-                                                return TextButton(
-                                                    child: const Text(
-                                                        "Essayez de nouveau"),
-                                                    onPressed: () {
-                                                      // Navigator.push(
-                                                      //   context,
-                                                      //   MaterialPageRoute(
-                                                      //       builder: (context) =>
-                                                      //           const Registration()),
-                                                      // );
-                                                      setState(() {
-                                                        otp = true;
-                                                        _error = "";
-                                                        _otp.text = "";
-                                                      });
-                                                    });
+                                                return Column(
+                                                  children: [
+                                                    const Text(
+                                                      "Mode Invité accéder à l'application sans vous enregistrer",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 20,
+                                                    ),
+                                                    Container(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child: CustomButton(
+                                                            title:
+                                                                "Mode Invité",
+                                                            onClick: () async {
+                                                              ProfilPreferences
+                                                                  .toggleInvite();
+                                                              context
+                                                                  .read<
+                                                                      Invite>()
+                                                                  .toggleStatus();
+                                                            }))
+                                                  ],
+                                                );
                                               }
                                             }),
                                       ],
@@ -302,25 +226,80 @@ class _RegistrationState extends State<Registration> {
                 style: const TextStyle(color: Colors.redAccent),
               ),
             ),
-            const Text(
-              "Mode Invité accéder à l'application sans vous enregistrer",
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Container(
-                alignment: Alignment.center,
-                child: CustomButton(
-                    title: "Mode Invité",
-                    onClick: () async {
-                      ProfilPreferences.toggleInvite();
-                      context.read<Invite>().toggleStatus();
-                    }))
           ],
         ),
       ),
     );
+  }
+
+  _sendNotification() async {
+    FocusScope.of(context).unfocus();
+
+    String phone = _phoneNumber.value.text.trim();
+    setState(() {
+      _loader = !_loader;
+    });
+
+    try {
+      await _auth.verifyPhoneNumber(
+        phoneNumber: "+237" + phone,
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          await _auth.signInWithCredential(credential);
+
+          if (_auth.currentUser?.uid != null) {
+            Navigator.pushNamed(context, '/signIn');
+          }
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          setState(() {
+            _loader = false;
+            otp = false;
+          });
+          if (e.code == 'invalid-phone-number') {
+            setState(() {
+              _error = "Numéro de tel invalide";
+            });
+          }
+        },
+        codeSent: (String verificationId, int? resendToken) async {
+          setState(() {
+            _verificationId = verificationId;
+            _loader = !_loader;
+            otp = !otp;
+          });
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {},
+      );
+    } catch (error) {
+      if (mounted) {
+        setState(() {
+          _error = "Une erreur est survenu";
+        });
+      }
+    }
+  }
+
+  _sendNotif() async {
+    setState(() {
+      _loader = true;
+    });
+    FocusScope.of(context).unfocus();
+    try {
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: _verificationId, smsCode: _otp.value.text);
+      await _auth.signInWithCredential(credential);
+
+      setState(() {
+        _loader = _loader;
+      });
+    } catch (error) {
+      if (mounted) {
+        setState(() {
+          _error = "Le code saisie est invalide";
+          _loader = false;
+        });
+      }
+    }
   }
 
   final Stream<int> _stream =

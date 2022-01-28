@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.church</string>
+	<string>com.digitalsekou.church</string>
 	<key>PROJECT_ID</key>
 	<string>eglise-c493d</string>
 	<key>STORAGE_BUCKET</key>

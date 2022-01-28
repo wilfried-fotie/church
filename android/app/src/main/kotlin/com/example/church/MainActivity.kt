@@ -1,4 +1,4 @@
-package com.example.church
+package com.digitalsekou.church
 
 import io.flutter.embedding.android.FlutterActivity
 

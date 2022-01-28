@@ -7,12 +7,64 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:852242999914:android:f29c8ff8170eb01936f813",
+        "android_client_info": {
+          "package_name": "com.digitalsekou.church"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "852242999914-ci7dafiiodthhkgd5ttf248o7dc663dd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.digitalsekou.church",
+            "certificate_hash": "0d21fd9c1db0ab8fb0338338d8a06366b639cb50"
+          }
+        },
+        {
+          "client_id": "852242999914-c087shdd8dbeg0280ms0fbc099otbloa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAjh2G7taG5v0-zsHJRnR3eQhKVpxNxi0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "852242999914-c087shdd8dbeg0280ms0fbc099otbloa.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "852242999914-egll72enoirrd50ef11ckbuub0tjkj6o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.church"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:852242999914:android:68ae4be91582d40436f813",
         "android_client_info": {
           "package_name": "com.example.church"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "852242999914-4aeoo2qiv6gpf4ea1he8h0gmhgc6khja.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.church",
+            "certificate_hash": "0d21fd9c1db0ab8fb0338338d8a06366b639cb50"
+          }
+        },
         {
           "client_id": "852242999914-c087shdd8dbeg0280ms0fbc099otbloa.apps.googleusercontent.com",
           "client_type": 3
